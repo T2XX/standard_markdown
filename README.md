@@ -1,2 +1,5 @@
-# standard_markdown_viewer
-A flutter package  markdown which support GFM/CommonMark standard
+# standard_markdown
+
+A flutter markdown package which support GFM/CommonMark standard
+
+# How To Use
