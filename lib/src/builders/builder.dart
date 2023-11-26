@@ -1,18 +1,14 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../ast.dart';
 import '../helpers/inline_wraper.dart';
-import '../helpers/is_dark_mode.dart';
 import '../models/markdown_tree_element.dart';
 import '../renderer.dart';
 
 abstract class MarkdownElementBuilder {
-  MarkdownElementBuilder({
-    this.context,
-    this.textStyle,
-    this.textStyleMap,
-  }) : darkMode = isDarkMode(context) {
+  MarkdownElementBuilder({this.context, this.textStyle, this.textStyleMap}) {
     assert(matchTypes.isNotEmpty);
     assert(
       textStyle == null || textStyleMap == null,
@@ -39,8 +35,6 @@ abstract class MarkdownElementBuilder {
   final TextStyle? textStyle;
 
   final BuildContext? context;
-
-  final bool darkMode;
 
   /// If [matchTypes] matches more than one type, you need to use textStyleMap
   /// to set [TextStyle] for each type.

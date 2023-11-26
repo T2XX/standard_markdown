@@ -10,6 +10,7 @@ import 'builders/code_span_builder.dart';
 import 'builders/footnote_builder.dart';
 import 'builders/headline_builder.dart';
 import 'builders/image_builder.dart';
+import 'builders/latex_block_builder.dart';
 import 'builders/link_builder.dart';
 import 'builders/list_builder.dart';
 import 'builders/paragraph_builder.dart';
@@ -66,6 +67,7 @@ class MarkdownRenderer implements NodeVisitor {
         h5Padding: styleSheet.h5Padding,
         h6Padding: styleSheet.h6Padding,
       ),
+      latexBlockBuilder(),
       SimpleInlinesBuilder(
         context: context,
         emphasis: styleSheet.emphasis,

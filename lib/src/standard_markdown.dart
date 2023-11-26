@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 import 'builders/builder.dart';
+import 'builders/latex_block_builder.dart';
 import 'definition.dart';
 import 'renderer.dart';
 import 'style.dart';
@@ -95,7 +96,7 @@ class _MarkdownViewerState extends State<StandardMarkdown> {
   Widget _buildMarkdown({SelectionRegistrar? selectionRegistrar}) {
     final markdown = md.Markdown(
       enableHtmlBlock: false,
-      enableRawHtml: false,
+      enableRawHtml: true,
       enableHighlight: true,
       enableStrikethrough: true,
       enableTaskList: widget.enableTaskList,
@@ -105,24 +106,29 @@ class _MarkdownViewerState extends State<StandardMarkdown> {
       enableFootnote: widget.enableFootnote,
       enableAutolinkExtension: widget.enableAutolinkExtension,
       forceTightList: widget.forceTightList,
-      extensions: widget.syntaxExtensions,
+      extensions: [
+        LatexBlockSyntax(),
+        LatexInlineSyntax(),
+        ...widget.syntaxExtensions
+      ],
     );
 
     final renderer = MarkdownRenderer(
-      context: context,
-      styleSheet: widget.styleSheet ?? const MarkdownStyle(),
-      onTapLink: widget.onTapLink,
-      enableImageSize: widget.enableImageSize,
-      imageBuilder: widget.imageBuilder,
-      listItemMarkerBuilder: widget.listItemMarkerBuilder,
-      checkboxBuilder: widget.checkboxBuilder,
-      elementBuilders: widget.elementBuilders,
-      selectionColor: widget.selectionColor ?? const Color(0x4a006ff8),
-      selectionRegistrar: selectionRegistrar,
-      copyIconBuilder: widget.copyIconBuilder,
-    );
+        context: context,
+        styleSheet: widget.styleSheet ?? const MarkdownStyle(),
+        onTapLink: widget.onTapLink,
+        enableImageSize: widget.enableImageSize,
+        imageBuilder: widget.imageBuilder,
+        listItemMarkerBuilder: widget.listItemMarkerBuilder,
+        checkboxBuilder: widget.checkboxBuilder,
+        elementBuilders: widget.elementBuilders,
+        selectionColor: widget.selectionColor ?? const Color(0x4a006ff8),
+        selectionRegistrar: selectionRegistrar,
+        copyIconBuilder: widget.copyIconBuilder);
 
     List<md.Node> astNodes;
+    astNodes = markdown.parse(widget.data);
+
     try {
       astNodes = markdown.parse(widget.data);
       if (widget.nodesFilter != null) {
@@ -146,10 +152,9 @@ class _MarkdownViewerState extends State<StandardMarkdown> {
     Widget markdownWidget;
     if (children.length > 1) {
       markdownWidget = Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: children,
-      );
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: children);
     } else if (children.length == 1) {
       markdownWidget = children.single;
     } else {

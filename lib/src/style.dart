@@ -1,5 +1,4 @@
-import 'package:flutter/rendering.dart';
-
+import 'package:flutter/material.dart';
 import 'definition.dart';
 
 class MarkdownStyle {
@@ -100,7 +99,7 @@ class MarkdownStyle {
   final TextStyle? listItemMarker;
   final double? listItemMarkerTrailingSpace;
   final double? listItemMinIndent;
-  final TextStyle? checkbox;
+  final ButtonStyle? checkbox;
   final TextStyle? table;
   final TextStyle? tableHead;
   final TextStyle? tableBody;

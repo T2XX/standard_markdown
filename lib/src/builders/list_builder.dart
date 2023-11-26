@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../ast.dart';
 import '../definition.dart';
@@ -23,7 +24,7 @@ class ListBuilder extends MarkdownElementBuilder {
         });
 
   final TextStyle? listItemMarker;
-  final TextStyle? checkbox;
+  final ButtonStyle? checkbox;
   final double? listItemMarkerTrailingSpace;
   final double? listItemMinIndent;
   final MarkdownListItemMarkerBuilder? listItemMarkerBuilder;
@@ -136,19 +137,21 @@ class ListBuilder extends MarkdownElementBuilder {
   }
 
   Widget _buildCheckbox(bool checked, TextStyle? listItemStyle) {
+    RxBool check = checked.obs;
     if (checkboxBuilder != null) {
       return checkboxBuilder!(checked);
     }
 
-    final checkboxStyle = TextStyle(
-      fontSize: (listItemStyle?.fontSize ?? 16.0) * 1.2,
-    ).merge(checkbox);
-
-    return Icon(
-      checked ? Icons.check_box_outlined : Icons.check_box_outline_blank,
-      size: checkboxStyle.fontSize,
-      color: checkboxStyle.color,
-    );
+    return Obx(() => IconButton(
+          splashRadius: 1,
+          onPressed: () {
+            check.value = !check.value;
+          },
+          style: checkbox,
+          icon: Icon(check.value
+              ? Icons.check_box_outlined
+              : Icons.check_box_outline_blank),
+        ));
   }
 
   double? _getLineHeight(TextStyle? style) {

@@ -3,7 +3,6 @@ import 'package:flutter_prism/flutter_prism.dart';
 import 'package:get/get.dart';
 
 import '../definition.dart';
-import '../helpers/is_dark_mode.dart';
 import '../widgets/copy_button.dart';
 import 'builder.dart';
 
@@ -17,7 +16,7 @@ class CodeBlockBuilder extends MarkdownElementBuilder {
     this.copyIconColor,
   }) : super(
             textStyle: TextStyle(
-          color: isDarkMode(context)
+          color: Get.isDarkMode
               ? const Color(0xffcccccc)
               : const Color(0xff333333),
         ).merge(textStyle));
@@ -67,7 +66,7 @@ class CodeBlockBuilder extends MarkdownElementBuilder {
   @override
   Widget buildWidget(element, parent) {
     Color backgroundColor;
-    if (darkMode) {
+    if (Get.isDarkMode) {
       backgroundColor = const Color(0xff101010);
     } else {
       backgroundColor = const Color(0xfff0f0f0);

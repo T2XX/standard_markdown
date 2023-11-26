@@ -37,3 +37,4 @@ Support three editing modes
 - [ ] toolbar
 - [x] loadFromString
 - [ ] loadFromselectFile
+- [ ] a controller control all

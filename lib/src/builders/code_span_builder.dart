@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'builder.dart';
 
 class CodeSpanBuilder extends MarkdownElementBuilder {
@@ -17,7 +18,7 @@ class CodeSpanBuilder extends MarkdownElementBuilder {
   TextStyle? buildTextStyle(element, defaultStyle) {
     Color color;
     Color backgroundColor;
-    if (darkMode) {
+    if (Get.isDarkMode) {
       color = const Color(0Xffca4219);
       backgroundColor = const Color(0Xff424242);
     } else {
