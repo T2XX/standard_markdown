@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_math_fork/flutter_math.dart';
 import '../../standard_markdown.dart';
 
-class latexBlockBuilder extends MarkdownElementBuilder {
+class LatexBlockBuilder extends MarkdownElementBuilder {
   @override
   final matchTypes = ['LatexInline', 'LatexBlock'];
 

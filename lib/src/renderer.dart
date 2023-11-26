@@ -67,7 +67,7 @@ class MarkdownRenderer implements NodeVisitor {
         h5Padding: styleSheet.h5Padding,
         h6Padding: styleSheet.h6Padding,
       ),
-      latexBlockBuilder(),
+      LatexBlockBuilder(),
       SimpleInlinesBuilder(
         context: context,
         emphasis: styleSheet.emphasis,

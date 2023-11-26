@@ -38,7 +38,7 @@ class CodeBlockBuilder extends MarkdownElementBuilder {
   @override
   TextSpan buildText(text, parent) {
     // final textContent = text.trimRight();
-    parent.attributes['infoString'];
+    // parent.attributes['infoString'];
     final style = const TextStyle(fontFamily: 'monospace').merge(parent.style);
     late List<TextSpan> spans;
     try {
