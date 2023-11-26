@@ -1,7 +1,5 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-
 import '../ast.dart';
 import '../helpers/inline_wraper.dart';
 import '../models/markdown_tree_element.dart';

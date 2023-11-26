@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_math_fork/flutter_math.dart';
-import '../../standard_markdown_all.dart';
-import '../extensions.dart';
-import 'builder.dart';
+import '../../standard_markdown.dart';
 
 class latexBlockBuilder extends MarkdownElementBuilder {
   @override
@@ -30,6 +28,8 @@ class latexBlockBuilder extends MarkdownElementBuilder {
                     return Text('$textContent',
                         style: TextStyle(color: Colors.red));
                   }))));
+    } else {
+      return null;
     }
   }
 }

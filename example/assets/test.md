@@ -94,10 +94,12 @@ Hello **Markdown**!
 
 ### Dependencies
 
-| Name            | Required |
-| --------------- | -------: |
-| `dart_markdown` |      Yes |
-| `flutter_prism` |       No |
+| Name                | Required |
+| ------------------- | -------: |
+| `dart_markdown`     |      Yes |
+| `flutter_prism`     |      Yes |
+| `get`               |      yes |
+| `flutter_math_fork` |      yes |
 
 这是一篇讲解如何正确使用 **Markdown** 的排版示例，学会这个很有必要，能让你的文章有更佳清晰的排版。
 

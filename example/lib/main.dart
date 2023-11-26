@@ -1,7 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'extension.dart';
-import 'package:standard_markdown/standard_markdown_all.dart';
+import 'package:standard_markdown/standard_markdown.dart';
 
 const markdown = r'''
 # I'm h1

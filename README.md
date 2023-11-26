@@ -9,6 +9,10 @@ import 'package:standard_markdown/standard_markdown_all.dart'; // import package
 StandardMarkdown(markdown) // use Widget
 ```
 
+# TODO
+
+It will be finish before 1.0.0 stable
+
 ## Support editing modes
 
 - [ ] Instant rendering (ir)
