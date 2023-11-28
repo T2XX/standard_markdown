@@ -53,20 +53,7 @@ class MarkdownRenderer implements NodeVisitor {
         ),
         _textAlign = textAlign ?? TextAlign.start {
     final defaultBuilders = [
-      HeadlineBuilder(
-        headline1: styleSheet.headline1,
-        headline2: styleSheet.headline2,
-        headline3: styleSheet.headline3,
-        headline4: styleSheet.headline4,
-        headline5: styleSheet.headline5,
-        headline6: styleSheet.headline6,
-        h1Padding: styleSheet.h1Padding,
-        h2Padding: styleSheet.h2Padding,
-        h3Padding: styleSheet.h3Padding,
-        h4Padding: styleSheet.h4Padding,
-        h5Padding: styleSheet.h5Padding,
-        h6Padding: styleSheet.h6Padding,
-      ),
+      HeadlineBuilder(),
       LatexBlockBuilder(),
       SimpleInlinesBuilder(
         context: context,
@@ -127,7 +114,6 @@ class MarkdownRenderer implements NodeVisitor {
         checkbox: styleSheet.checkbox,
         listItemMarkerBuilder: listItemMarkerBuilder,
         paragraphPadding: styleSheet.paragraphPadding,
-        checkboxBuilder: checkboxBuilder,
       ),
       FootnoteBuilder(
         footnote: styleSheet.footnote,

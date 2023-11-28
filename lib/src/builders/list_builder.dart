@@ -15,7 +15,6 @@ class ListBuilder extends MarkdownElementBuilder {
     required this.listItemMinIndent,
     this.checkbox,
     this.listItemMarkerBuilder,
-    this.checkboxBuilder,
     this.paragraphPadding,
   }) : super(textStyleMap: {
           'orderedList': list,
@@ -28,7 +27,6 @@ class ListBuilder extends MarkdownElementBuilder {
   final double? listItemMarkerTrailingSpace;
   final double? listItemMinIndent;
   final MarkdownListItemMarkerBuilder? listItemMarkerBuilder;
-  final MarkdownCheckboxBuilder? checkboxBuilder;
   final EdgeInsets? paragraphPadding;
 
   @override
@@ -137,18 +135,12 @@ class ListBuilder extends MarkdownElementBuilder {
   }
 
   Widget _buildCheckbox(bool checked, TextStyle? listItemStyle) {
-    RxBool check = checked.obs;
-    if (checkboxBuilder != null) {
-      return checkboxBuilder!(checked);
-    }
-
-    return Obx(() => IconButton(
-          splashRadius: 1,
-          onPressed: () {
+    final RxBool check = checked.obs;
+    return Obx(() => GestureDetector(
+          onTap: () {
             check.value = !check.value;
           },
-          style: checkbox,
-          icon: Icon(check.value
+          child: Icon(check.value
               ? Icons.check_box_outlined
               : Icons.check_box_outline_blank),
         ));

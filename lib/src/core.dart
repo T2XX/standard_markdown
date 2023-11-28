@@ -14,7 +14,6 @@ class StandardMarkdown extends StatefulWidget {
     this.styleSheet,
     this.onTapLink,
     this.listItemMarkerBuilder,
-    this.checkboxBuilder,
     this.imageBuilder,
     this.enableTaskList = false,
     this.enableSubscript = false,
@@ -46,7 +45,6 @@ class StandardMarkdown extends StatefulWidget {
   final MarkdownStyle? styleSheet;
   final MarkdownTapLinkCallback? onTapLink;
   final MarkdownListItemMarkerBuilder? listItemMarkerBuilder;
-  final MarkdownCheckboxBuilder? checkboxBuilder;
   final List<MarkdownElementBuilder> elementBuilders;
   final List<md.Syntax> syntaxExtensions;
   final Color? selectionColor;
@@ -120,7 +118,6 @@ class _MarkdownViewerState extends State<StandardMarkdown> {
         enableImageSize: widget.enableImageSize,
         imageBuilder: widget.imageBuilder,
         listItemMarkerBuilder: widget.listItemMarkerBuilder,
-        checkboxBuilder: widget.checkboxBuilder,
         elementBuilders: widget.elementBuilders,
         selectionColor: widget.selectionColor ?? const Color(0x4a006ff8),
         selectionRegistrar: selectionRegistrar,

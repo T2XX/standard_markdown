@@ -6,13 +6,8 @@ import 'package:markdown_prettier/markdown_prettier.dart';
 import 'src/syntax/latex_Syntax.dart';
 
 class MarkDownController extends GetxController {
-  String type = '';
-  List<md.Node> astTree = [];
-
-  RxList<Widget> markdownWidget = [SizedBox()].obs;
   RxBool svMode = false.obs;
   RxInt currentEdting = (-1).obs;
-  Map<String, Function(Map args)> renders = {"atxHeading": (args) {}};
   void loadFromSring(String text) {
     final markdown = md.Markdown(
         enableAtxHeading: true,
@@ -48,10 +43,24 @@ class MarkDownController extends GetxController {
         enableTaskList: true,
         enableThematicBreak: true,
         extensions: [LatexBlockSyntax(), LatexInlineSyntax()]);
-    astTree = markdown.parse(text);
+    //markdown.parse(text);
   }
 
   String formate(String text) {
     return MarkdownPrettier().parse(text);
   }
+
+  /* H1Style */
+  TextStyle h1TextStyle = TextStyle(fontSize: 16 * 2);
+  TextStyle h2TextStyle = TextStyle(fontSize: 16 * 1.8);
+  TextStyle h3TextStyle = TextStyle(fontSize: 16 * 1.6);
+  TextStyle h4TextStyle = TextStyle(fontSize: 16 * 1.4);
+  TextStyle h5TextStyle = TextStyle(fontSize: 16 * 1.2);
+  TextStyle h6TextStyle = TextStyle(fontSize: 16);
+  EdgeInsets h1Padding = EdgeInsets.only(bottom: 12);
+  EdgeInsets h2Padding = EdgeInsets.only(bottom: 9);
+  EdgeInsets h3Padding = EdgeInsets.only(bottom: 6);
+  EdgeInsets h4Padding = EdgeInsets.only(bottom: 4);
+  EdgeInsets h5Padding = EdgeInsets.only(bottom: 3);
+  EdgeInsets h6Padding = EdgeInsets.only(bottom: 3);
 }

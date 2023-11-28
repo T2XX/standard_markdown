@@ -72,7 +72,6 @@ class CodeBlockBuilder extends MarkdownElementBuilder {
       backgroundColor = const Color(0xfff0f0f0);
     }
 
-    const defaultPadding = EdgeInsets.all(15.0);
     final defaultDecoration = BoxDecoration(
       color: backgroundColor,
       borderRadius: BorderRadius.circular(5),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_math_fork/flutter_math.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 import '../../standard_markdown.dart';
 
 class LatexBlockBuilder extends MarkdownElementBuilder {
@@ -11,11 +12,26 @@ class LatexBlockBuilder extends MarkdownElementBuilder {
     final String textContent = element.attributes['latexContent']!;
 
     if (element.type == 'LatexInline') {
-      return DefaultTextStyle(
-          style: parent.style!,
-          child: Math.tex(textContent, onErrorFallback: (error) {
-            return Text(textContent, style: TextStyle(color: Colors.red));
-          }));
+      final level = parent.element.attributes['level'];
+      return RichText(
+          text: WidgetSpan(
+              child: Container(
+                  padding: EdgeInsets.only(
+                      top: level == '1'
+                          ? 16
+                          : level == '2'
+                              ? 14
+                              : level == '3'
+                                  ? 12
+                                  : level == '4'
+                                      ? 10
+                                      : level == '5'
+                                          ? 8
+                                          : 6),
+                  child: Math.tex(textContent, textStyle: parentStyle,
+                      onErrorFallback: (error) {
+                    return Text(textContent);
+                  }))));
     } else if (element.type == 'LatexBlock') {
       return DefaultTextStyle(
           style: parent.style!,
@@ -24,7 +40,9 @@ class LatexBlockBuilder extends MarkdownElementBuilder {
               height: 18,
               child: Align(
                   alignment: Alignment.bottomCenter,
-                  child: Math.tex(textContent, onErrorFallback: (error) {
+                  child:
+                      Math.tex(textContent, textStyle: TextStyle(fontSize: 42),
+                          onErrorFallback: (error) {
                     return Text(textContent,
                         style: TextStyle(color: Colors.red));
                   }))));

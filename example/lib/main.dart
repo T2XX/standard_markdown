@@ -1,12 +1,11 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'extension.dart';
 import 'package:standard_markdown/standard_markdown.dart';
 
 const markdown = r'''
-# I'm h1
+# I'm h1 _sd_
 
-## I'm h2
+## I'm h2  $dsda$
 
 ### I'm h3
 
@@ -307,37 +306,35 @@ class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('MarkdownViewer Demo')),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
-        child: StandardMarkdown(
-          markdown,
-          enableTaskList: true,
-          enableSuperscript: true,
-          enableSubscript: true,
-          enableFootnote: true,
-          enableImageSize: true,
-          enableKbd: true,
-          syntaxExtensions: [ExampleSyntax()],
-          onTapLink: (href, title) {
-            print({href, title});
-          },
-          elementBuilders: [
-            ExampleBuilder(),
-          ],
-          styleSheet: const MarkdownStyle(
-            listItemMarkerTrailingSpace: 12,
-            codeSpan: TextStyle(
-              fontFamily: 'RobotoMono',
+        appBar: AppBar(title: const Text('MarkdownViewer Demo')),
+        body: ListView(padding: const EdgeInsets.all(20), children: [
+          StandardMarkdown(
+            markdown,
+            enableTaskList: true,
+            enableSuperscript: true,
+            enableSubscript: true,
+            enableFootnote: true,
+            enableImageSize: true,
+            enableKbd: true,
+            syntaxExtensions: [ExampleSyntax()],
+            onTapLink: (href, title) {
+              print({href, title});
+            },
+            elementBuilders: [
+              ExampleBuilder(),
+            ],
+            styleSheet: const MarkdownStyle(
+              listItemMarkerTrailingSpace: 12,
+              codeSpan: TextStyle(
+                fontFamily: 'RobotoMono',
+              ),
+              codeBlock: TextStyle(
+                fontSize: 14,
+                letterSpacing: -0.3,
+                fontFamily: 'RobotoMono',
+              ),
             ),
-            codeBlock: TextStyle(
-              fontSize: 14,
-              letterSpacing: -0.3,
-              fontFamily: 'RobotoMono',
-            ),
-          ),
-        ),
-      ),
-    );
+          )
+        ]));
   }
 }
