@@ -1,9 +1,9 @@
 import 'package:dart_markdown/dart_markdown.dart' as md;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:standard_markdown/src/syntax/latex_Syntax.dart';
 
 import 'builders/builder.dart';
-import 'builders/latex_block_builder.dart';
 import 'definition.dart';
 import 'renderer.dart';
 import 'style.dart';

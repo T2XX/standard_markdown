@@ -83,13 +83,7 @@ class CodeBlockBuilder extends MarkdownElementBuilder {
       final textWidget = element.children.single;
       child = Stack(
         children: [
-          Scrollbar(
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              padding: padding ?? defaultPadding,
-              child: textWidget,
-            ),
-          ),
+          textWidget,
           Positioned(
             right: 0,
             top: 0,

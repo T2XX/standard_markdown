@@ -1,4 +1,4 @@
-library StandardMarkdown;
+library standard_markdown;
 
 export 'src/ast.dart';
 export 'src/builders/builder.dart';
