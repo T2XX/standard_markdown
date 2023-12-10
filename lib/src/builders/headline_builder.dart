@@ -1,60 +1,72 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:standard_markdown/src/helpers/inline_wraper.dart';
+import 'package:standard_markdown/standard_markdown.dart';
 
+import '../../global_coltroller.dart';
 import 'builder.dart';
 
 class HeadlineBuilder extends MarkdownElementBuilder {
-  HeadlineBuilder({
-    this.headline1,
-    this.headline2,
-    this.headline3,
-    this.headline4,
-    this.headline5,
-    this.headline6,
-    this.h1Padding,
-    this.h2Padding,
-    this.h3Padding,
-    this.h4Padding,
-    this.h5Padding,
-    this.h6Padding,
-  });
-
-  TextStyle? headline1;
-  TextStyle? headline2;
-  TextStyle? headline3;
-  TextStyle? headline4;
-  TextStyle? headline5;
-  TextStyle? headline6;
-  EdgeInsets? h1Padding;
-  EdgeInsets? h2Padding;
-  EdgeInsets? h3Padding;
-  EdgeInsets? h4Padding;
-  EdgeInsets? h5Padding;
-  EdgeInsets? h6Padding;
+  HeadlineBuilder();
 
   @override
   TextStyle? buildTextStyle(element, defaultStyle) {
-    final baseFontSize = defaultStyle.fontSize ?? 16;
-
     return defaultStyle.merge({
-      "1": TextStyle(fontSize: baseFontSize * 2).merge(headline1),
-      "2": TextStyle(fontSize: baseFontSize * 1.8).merge(headline2),
-      "3": TextStyle(fontSize: baseFontSize * 1.6).merge(headline3),
-      "4": TextStyle(fontSize: baseFontSize * 1.4).merge(headline4),
-      "5": TextStyle(fontSize: baseFontSize * 1.2).merge(headline5),
-      "6": TextStyle(fontSize: baseFontSize).merge(headline6),
+      "1": controller.h1TextStyle,
+      "2": controller.h2TextStyle,
+      "3": controller.h3TextStyle,
+      "4": controller.h4TextStyle,
+      "5": controller.h5TextStyle,
+      "6": controller.h6TextStyle,
     }[element.attributes['level']]);
+  }
+
+  Widget? buildWidget(MarkdownTreeElement element, MarkdownTreeElement parent) {
+    final children = element.children;
+    if (children.isEmpty) {
+      return null;
+    }
+
+    if (!isBlock(element)) {
+      return InlineWraper(element.children);
+    }
+
+    final widget = Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        ...children,
+        element.attributes['level'] == '1' ||
+                element.attributes['level'] == '2' ||
+                element.attributes['level'] == '3'
+            ? Divider()
+            : SizedBox()
+      ],
+    );
+
+    final padding = blockPadding(element, parent);
+    if (padding == null || padding == EdgeInsets.zero) {
+      return widget;
+    }
+
+    return Padding(
+      padding: padding,
+      child: widget,
+    );
   }
 
   @override
   final matchTypes = ['headline'];
+  final MarkDownController controller = Get.put(MarkDownController());
 
   @override
   EdgeInsets? blockPadding(element, parent) => {
-        "1": h1Padding,
-        "2": h2Padding,
-        "3": h3Padding,
-        "4": h4Padding,
-        "5": h5Padding,
-        "6": h6Padding,
+        "1": controller.h1Padding,
+        "2": controller.h2Padding,
+        "3": controller.h3Padding,
+        "4": controller.h4Padding,
+        "5": controller.h5Padding,
+        "6": controller.h6Padding,
       }[element.attributes['level']];
 }

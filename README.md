@@ -5,7 +5,7 @@ A flutter markdown package which support GFM/CommonMark standard
 # How To Use
 
 ```dart
-import 'package:standard_markdown/standard_markdown_all.dart'; // import package
+import 'package:standard_markdown/standard_markdown.dart'; // import package
 StandardMarkdown(markdown) // use Widget
 ```
 

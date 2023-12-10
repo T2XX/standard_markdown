@@ -1,6 +1,5 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 
 import 'ast.dart';
 import 'builders/blockquote_builder.dart';
@@ -29,55 +28,25 @@ class MarkdownRenderer implements NodeVisitor {
   MarkdownRenderer({
     BuildContext? context,
     required MarkdownStyle styleSheet,
-    MarkdownTapLinkCallback? onTapLink,
     MarkdownListItemMarkerBuilder? listItemMarkerBuilder,
     MarkdownCheckboxBuilder? checkboxBuilder,
-    MarkdownImageBuilder? imageBuilder,
-    bool enableImageSize = false,
     List<MarkdownElementBuilder> elementBuilders = const [],
     TextAlign? textAlign,
-    Color? selectionColor,
-    SelectionRegistrar? selectionRegistrar,
     CopyIconBuilder? copyIconBuilder,
-  })  : _selectionColor = selectionColor,
-        _selectionRegistrar = selectionRegistrar,
-        _blockSpacing = styleSheet.blockSpacing,
-        _styleSheet = styleSheet,
+  })  : _styleSheet = styleSheet,
         _defaultTextStyle = TextStyle(
           fontSize: 16,
           height: 1.5,
           color: (context != null
-                  ? Theme.of(context).textTheme.bodyText2?.color
+                  ? Theme.of(context).textTheme.bodyMedium?.color
                   : null) ??
               const Color(0xff333333),
         ),
         _textAlign = textAlign ?? TextAlign.start {
     final defaultBuilders = [
-      HeadlineBuilder(
-        headline1: styleSheet.headline1,
-        headline2: styleSheet.headline2,
-        headline3: styleSheet.headline3,
-        headline4: styleSheet.headline4,
-        headline5: styleSheet.headline5,
-        headline6: styleSheet.headline6,
-        h1Padding: styleSheet.h1Padding,
-        h2Padding: styleSheet.h2Padding,
-        h3Padding: styleSheet.h3Padding,
-        h4Padding: styleSheet.h4Padding,
-        h5Padding: styleSheet.h5Padding,
-        h6Padding: styleSheet.h6Padding,
-      ),
+      HeadlineBuilder(),
       LatexBlockBuilder(),
-      SimpleInlinesBuilder(
-        context: context,
-        emphasis: styleSheet.emphasis,
-        strongEmphasis: styleSheet.strongEmphasis,
-        highlight: styleSheet.highlight,
-        strikethrough: styleSheet.strikethrough,
-        subscript: styleSheet.subscript,
-        superscript: styleSheet.superscript,
-        kbd: styleSheet.kbd,
-      ),
+      SimpleInlinesBuilder(),
       ThematicBreakBuilder(
         color: styleSheet.dividerColor,
         height: styleSheet.dividerHeight,
@@ -88,7 +57,7 @@ class MarkdownRenderer implements NodeVisitor {
         padding: styleSheet.paragraphPadding,
       ),
       CodeSpanBuilder(context: context, textStyle: styleSheet.codeSpan),
-      LinkBuilder(textStyle: styleSheet.link, onTap: onTapLink),
+      LinkBuilder(textStyle: styleSheet.link),
       TableBuilder(
         table: styleSheet.table,
         tableHead: styleSheet.tableHead,
@@ -99,10 +68,7 @@ class MarkdownRenderer implements NodeVisitor {
         tableCellPadding: styleSheet.tableCellPadding,
         tableColumnWidth: styleSheet.tableColumnWidth,
       ),
-      ImageBuilder(
-        imageBuilder: imageBuilder,
-        enableImageSize: enableImageSize,
-      ),
+      ImageBuilder(),
       CodeBlockBuilder(
         context: context,
         textStyle: styleSheet.codeBlock,
@@ -127,7 +93,6 @@ class MarkdownRenderer implements NodeVisitor {
         checkbox: styleSheet.checkbox,
         listItemMarkerBuilder: listItemMarkerBuilder,
         paragraphPadding: styleSheet.paragraphPadding,
-        checkboxBuilder: checkboxBuilder,
       ),
       FootnoteBuilder(
         footnote: styleSheet.footnote,
@@ -145,14 +110,8 @@ class MarkdownRenderer implements NodeVisitor {
   }
 
   final TextAlign _textAlign;
-  final double _blockSpacing;
-  final Color? _selectionColor;
-  final SelectionRegistrar? _selectionRegistrar;
   final MarkdownStyle _styleSheet;
   final TextStyle _defaultTextStyle;
-
-  bool get selectable => _selectionColor != null && _selectionRegistrar != null;
-  MouseCursor? get mouseCursor => selectable ? SystemMouseCursors.text : null;
 
   String? _keepLineEndingsWhen;
   final _gestureRecognizers = <String, GestureRecognizer>{};
@@ -254,17 +213,16 @@ class MarkdownRenderer implements NodeVisitor {
     final isBlock = builder.isBlock(current);
     if (widget != null) {
       // Add spacing between block elements
-      _tree.last.children.addIfTrue(
-        SizedBox(
-          height: _blockSpacing,
-          // TODO(Zhiguang): Remove it when this issue is fixed:
-          // https://github.com/flutter/flutter/issues/104548
-          child: selectable
-              ? const Text(' \n', selectionColor: Colors.transparent)
-              : null,
-        ),
-        isBlock && _tree.last.children.isNotEmpty,
-      );
+      // _tree.last.children.addIfTrue(
+      //   SizedBox(
+      //     height: _blockSpacing,
+
+      //     child: selectable
+      //         ? const Text(' \n', selectionColor: Colors.transparent)
+      //         : null,
+      //   ),
+      //   isBlock && _tree.last.children.isNotEmpty,
+      // );
 
       if (widget is InlineWraper) {
         parent.children.addAll(widget.children);
@@ -291,12 +249,7 @@ class MarkdownRenderer implements NodeVisitor {
     StrutStyle? strutStyle,
   }) {
     return RichText(
-      strutStyle: strutStyle,
-      text: text,
-      textAlign: textAlign ?? _textAlign,
-      selectionColor: _selectionColor,
-      selectionRegistrar: _selectionRegistrar,
-    );
+        strutStyle: strutStyle, text: text, textAlign: textAlign ?? _textAlign);
   }
 
   /// Merges the [RichText] elements of [widgets] while it is possible.

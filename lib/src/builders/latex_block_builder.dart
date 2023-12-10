@@ -11,74 +11,42 @@ class LatexBlockBuilder extends MarkdownElementBuilder {
     final String textContent = element.attributes['latexContent']!;
 
     if (element.type == 'LatexInline') {
-      return DefaultTextStyle(
-          style: parent.style!,
-          child: Math.tex(textContent, onErrorFallback: (error) {
-            return Text('$textContent', style: TextStyle(color: Colors.red));
-          }));
-    } else if (element.type == 'LatexBlock') {
-      return DefaultTextStyle(
-          style: parent.style!,
-          child: SizedBox(
-              width: double.infinity,
-              height: 18,
-              child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Math.tex(textContent, onErrorFallback: (error) {
-                    return Text('$textContent',
-                        style: TextStyle(color: Colors.red));
+      final level = parent.element.attributes['level'];
+      return RichText(
+          text: WidgetSpan(
+              child: Container(
+                  padding: EdgeInsets.only(
+                      top: level == '1'
+                          ? 16
+                          : level == '2'
+                              ? 14
+                              : level == '3'
+                                  ? 12
+                                  : level == '4'
+                                      ? 10
+                                      : level == '5'
+                                          ? 8
+                                          : 6),
+                  child: Math.tex(textContent, textStyle: parentStyle,
+                      onErrorFallback: (error) {
+                    return Text(textContent);
                   }))));
+    } else if (element.type == 'LatexBlock') {
+      return RichText(
+          text: WidgetSpan(
+              child: SizedBox(
+                  width: double.infinity,
+                  height: 18,
+                  child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Math.tex(textContent,
+                          textStyle: TextStyle(fontSize: 42),
+                          onErrorFallback: (error) {
+                        return Text(textContent,
+                            style: TextStyle(color: Colors.red));
+                      })))));
     } else {
       return null;
     }
-  }
-}
-
-class LatexInlineSyntax extends MdInlineSyntax {
-  LatexInlineSyntax()
-      : super(RegExp(r'(?<!\$)\$[^\$]+\$(?!\$)', multiLine: false));
-
-  @override
-  MdInlineObject? parse(MdInlineParser parser, Match match) {
-    final input = match.input;
-    final matchValue = input.substring(match.start, match.end);
-
-    final markers = parser.source;
-
-    return MdInlineElement('LatexInline',
-        markers: markers,
-        start: markers.first.end,
-        children: parser
-            .consumeBy(match[0]!.length)
-            .map((e) => MdText.fromSpan(e))
-            .toList(),
-        attributes: {
-          "latexContent": matchValue.substring(1, matchValue.length - 1)
-        },
-        end: markers.last.start);
-  }
-}
-
-class LatexBlockSyntax extends MdInlineSyntax {
-  LatexBlockSyntax() : super(RegExp(r'(?<!\$)\$\$[^$]*?\$\$(?!\$)'));
-
-  @override
-  MdInlineObject? parse(MdInlineParser parser, Match match) {
-    final input = match.input;
-    final matchValue = input.substring(match.start, match.end);
-
-    final markers = parser.source;
-
-    return MdInlineElement('LatexBlock',
-        markers: markers,
-        start: markers.first.end,
-        children: parser
-            .consumeBy(match[0]!.length)
-            .map((e) => MdText.fromSpan(e))
-            .toList(),
-        attributes: {
-          "latexContent": matchValue.substring(2, matchValue.length - 2)
-        },
-        end: markers.last.start);
   }
 }

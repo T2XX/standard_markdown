@@ -59,8 +59,7 @@ class CodeBlockBuilder extends MarkdownElementBuilder {
       return const TextSpan(text: '');
     }
 
-    return TextSpan(
-        children: spans, style: style, mouseCursor: renderer.mouseCursor);
+    return TextSpan(children: spans, style: style);
   }
 
   @override
@@ -72,7 +71,6 @@ class CodeBlockBuilder extends MarkdownElementBuilder {
       backgroundColor = const Color(0xfff0f0f0);
     }
 
-    const defaultPadding = EdgeInsets.all(15.0);
     final defaultDecoration = BoxDecoration(
       color: backgroundColor,
       borderRadius: BorderRadius.circular(5),
@@ -83,13 +81,7 @@ class CodeBlockBuilder extends MarkdownElementBuilder {
       final textWidget = element.children.single;
       child = Stack(
         children: [
-          Scrollbar(
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              padding: padding ?? defaultPadding,
-              child: textWidget,
-            ),
-          ),
+          textWidget,
           Positioned(
             right: 0,
             top: 0,

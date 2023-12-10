@@ -1,4 +1,3 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'extension.dart';
 import 'package:standard_markdown/standard_markdown.dart';
@@ -57,7 +56,7 @@ _italic text_
 [I&#39;m link](https://github.com/asjqkkkk/flutter-todos)
 
 - [ ] I'm _CheckBox_
-- [X] I'm _CheckBox_ too
+- [x] I'm _CheckBox_ too
 
 Test for divider(hr):
 
@@ -76,9 +75,9 @@ Hello **Markdown**!
 
 ### Highlights
 
-- [X] ==100%== conform to CommonMark.
-- [X] ==100%== conform to GFM.
-- [X] Easy to implement syntax **highlighting**, for example `flutter_prism`:
+- [x] ==100%== conform to CommonMark.
+- [x] ==100%== conform to GFM.
+- [x] Easy to implement syntax **highlighting**, for example `flutter_prism`:
 
   ```dart
 
@@ -91,19 +90,21 @@ Hello **Markdown**!
   }
 
   ```
-- [X] Easy to custom, for example:
+
+- [x] Easy to custom, for example:
 
   > This is a #custom_extension
-  >
 
 ---
 
 ### Dependencies
 
-| Name              | Required |
-| ----------------- | -------: |
-| `dart_markdown` |      Yes |
-| `flutter_prism` |       No |
+| Name                | Required |
+| ------------------- | -------: |
+| `dart_markdown`     |      Yes |
+| `flutter_prism`     |      Yes |
+| `get`               |      yes |
+| `flutter_math_fork` |      yes |
 
 这是一篇讲解如何正确使用 **Markdown** 的排版示例，学会这个很有必要，能让你的文章有更佳清晰的排版。
 
@@ -121,15 +122,6 @@ Hello **Markdown**!
 - `Code 标记` - `Code 标记`
 - [超级链接](https://ld246.com/) - `[超级链接](https://ld246.com)`
 - [username@gmail.com](mailto:username@gmail.com) - `[username@gmail.com](mailto:username@gmail.com)`
-
-### 提及用户
-
-@Vanessa 通过 `@User` 可以在内容中提及用户，被提及的用户将会收到系统通知。
-
-> NOTE:
->
-> 1. @用户名之后需要有一个空格
-> 2. 新手没有艾特的功能权限
 
 ### 表情符号 Emoji
 
@@ -235,8 +227,8 @@ public classHelloWorld{
 
 #### 任务列表
 
-- [X] 发布 Sym
-- [X] 发布 Solo
+- [x] 发布 Sym
+- [x] 发布 Solo
 - [ ] 预约牙医
 
 ### 表格
@@ -282,7 +274,9 @@ $$
 
 行内公式：
 
-公式$Em^2$是行内。
+公式 $Em^2$ 是行内。
+
+<img src="data:image/png;base64,iVBORw0KGg...=" alt="Base64 图像示例">
 ''';
 var latex = r'''$$
 123123\pm
@@ -306,7 +300,6 @@ class MyApp extends StatelessWidget {
       title: 'MarkdownViewer Demo',
       debugShowCheckedModeBanner: false,
       home: const MyHomePage(),
-      scrollBehavior: CustomScrollBehavior(),
     );
   }
 }
@@ -317,45 +310,31 @@ class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('MarkdownViewer Demo')),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
-        child: StandardMarkdown(
-          markdown,
-          enableTaskList: true,
-          enableSuperscript: true,
-          enableSubscript: true,
-          enableFootnote: true,
-          enableImageSize: true,
-          enableKbd: true,
-          syntaxExtensions: [ExampleSyntax()],
-          onTapLink: (href, title) {
-            print({href, title});
-          },
-          elementBuilders: [
-            ExampleBuilder(),
-          ],
-          styleSheet: const MarkdownStyle(
-            listItemMarkerTrailingSpace: 12,
-            codeSpan: TextStyle(
-              fontFamily: 'RobotoMono',
+        appBar: AppBar(title: const Text('MarkdownViewer Demo')),
+        body: ListView(padding: const EdgeInsets.all(20), children: [
+          StandardMarkdown(
+            markdown,
+            enableTaskList: true,
+            enableSuperscript: true,
+            enableSubscript: true,
+            enableFootnote: true,
+            enableKbd: true,
+            syntaxExtensions: [ExampleSyntax()],
+            elementBuilders: [
+              ExampleBuilder(),
+            ],
+            styleSheet: const MarkdownStyle(
+              listItemMarkerTrailingSpace: 12,
+              codeSpan: TextStyle(
+                fontFamily: 'RobotoMono',
+              ),
+              codeBlock: TextStyle(
+                fontSize: 14,
+                letterSpacing: -0.3,
+                fontFamily: 'RobotoMono',
+              ),
             ),
-            codeBlock: TextStyle(
-              fontSize: 14,
-              letterSpacing: -0.3,
-              fontFamily: 'RobotoMono',
-            ),
-          ),
-        ),
-      ),
-    );
+          )
+        ]));
   }
-}
-
-class CustomScrollBehavior extends MaterialScrollBehavior {
-  @override
-  Set<PointerDeviceKind> get dragDevices => {
-        PointerDeviceKind.touch,
-        PointerDeviceKind.mouse,
-      };
 }
