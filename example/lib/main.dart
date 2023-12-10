@@ -3,9 +3,9 @@ import 'extension.dart';
 import 'package:standard_markdown/standard_markdown.dart';
 
 const markdown = r'''
-# I'm h1 _sd_
+# I'm h1
 
-## I'm h2  $dsda$
+## I'm h2
 
 ### I'm h3
 
@@ -56,7 +56,7 @@ _italic text_
 [I&#39;m link](https://github.com/asjqkkkk/flutter-todos)
 
 - [ ] I'm _CheckBox_
-- [X] I'm _CheckBox_ too
+- [x] I'm _CheckBox_ too
 
 Test for divider(hr):
 
@@ -75,9 +75,9 @@ Hello **Markdown**!
 
 ### Highlights
 
-- [X] ==100%== conform to CommonMark.
-- [X] ==100%== conform to GFM.
-- [X] Easy to implement syntax **highlighting**, for example `flutter_prism`:
+- [x] ==100%== conform to CommonMark.
+- [x] ==100%== conform to GFM.
+- [x] Easy to implement syntax **highlighting**, for example `flutter_prism`:
 
   ```dart
 
@@ -90,19 +90,21 @@ Hello **Markdown**!
   }
 
   ```
-- [X] Easy to custom, for example:
+
+- [x] Easy to custom, for example:
 
   > This is a #custom_extension
-  >
 
 ---
 
 ### Dependencies
 
-| Name              | Required |
-| ----------------- | -------: |
-| `dart_markdown` |      Yes |
-| `flutter_prism` |       No |
+| Name                | Required |
+| ------------------- | -------: |
+| `dart_markdown`     |      Yes |
+| `flutter_prism`     |      Yes |
+| `get`               |      yes |
+| `flutter_math_fork` |      yes |
 
 这是一篇讲解如何正确使用 **Markdown** 的排版示例，学会这个很有必要，能让你的文章有更佳清晰的排版。
 
@@ -123,7 +125,7 @@ Hello **Markdown**!
 
 ### 表情符号 Emoji
 
-支持大部分标准的表情符号，可使用输入法直接输入。
+支持大部分标准的表情符号，可使用输入法直接输入，也可手动输入字符格式。通过输入 `:` 触发自动完成，可在个人设置中[设置常用表情](https://ld246.com/settings/function)。
 
 #### 一些表情例子
 
@@ -225,8 +227,8 @@ public classHelloWorld{
 
 #### 任务列表
 
-- [X] 发布 Sym
-- [X] 发布 Solo
+- [x] 发布 Sym
+- [x] 发布 Solo
 - [ ] 预约牙医
 
 ### 表格
@@ -272,7 +274,9 @@ $$
 
 行内公式：
 
-公式$Em^2$是行内。
+公式 $Em^2$ 是行内。
+
+<img src="data:image/png;base64,iVBORw0KGg...=" alt="Base64 图像示例">
 ''';
 var latex = r'''$$
 123123\pm
@@ -291,7 +295,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData.light(useMaterial3: false),
+      theme: ThemeData.light(),
       darkTheme: ThemeData.dark(),
       title: 'MarkdownViewer Demo',
       debugShowCheckedModeBanner: false,
@@ -314,12 +318,8 @@ class MyHomePage extends StatelessWidget {
             enableSuperscript: true,
             enableSubscript: true,
             enableFootnote: true,
-            enableImageSize: true,
             enableKbd: true,
             syntaxExtensions: [ExampleSyntax()],
-            onTapLink: (href, title) {
-              print({href, title});
-            },
             elementBuilders: [
               ExampleBuilder(),
             ],

@@ -59,8 +59,7 @@ class CodeBlockBuilder extends MarkdownElementBuilder {
       return const TextSpan(text: '');
     }
 
-    return TextSpan(
-        children: spans, style: style, mouseCursor: renderer.mouseCursor);
+    return TextSpan(children: spans, style: style);
   }
 
   @override

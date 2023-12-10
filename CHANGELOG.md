@@ -1,4 +1,8 @@
-## 0.0.1+1
+## 0.0.2
+
+- fix latex height
+  
+## 0.0.1
 
 - add web support
 

@@ -1,15 +1,16 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import '../../global_coltroller.dart';
 
-import '../definition.dart';
 import 'builder.dart';
+
+final MarkDownController controller = Get.put(MarkDownController());
 
 class LinkBuilder extends MarkdownElementBuilder {
   LinkBuilder({
     TextStyle? textStyle,
-    MarkdownTapLinkCallback? onTap,
-  })  : _onTap = onTap,
-        super(
+  }) : super(
           textStyle: const TextStyle(
             color: Color(0xff2196f3),
           ).merge(textStyle),
@@ -18,21 +19,10 @@ class LinkBuilder extends MarkdownElementBuilder {
   @override
   final matchTypes = ['link'];
 
-  final MarkdownTapLinkCallback? _onTap;
-
   @override
   GestureRecognizer? gestureRecognizer(element) {
-    if (_onTap == null) {
-      return null;
-    }
-    final attributes = element.attributes;
-
     return TapGestureRecognizer()
-      ..onTap = () {
-        _onTap!(
-          attributes['destination'],
-          attributes['title'],
-        );
-      };
+      ..onTap = () => controller.linkTap(
+          element.attributes['destination'], element.attributes['title']);
   }
 }

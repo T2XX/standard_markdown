@@ -1,19 +1,11 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-
-import '../definition.dart';
 import '../models/markdown_tree_element.dart';
 import 'builder.dart';
 
 class ImageBuilder extends MarkdownElementBuilder {
-  ImageBuilder({
-    this.imageBuilder,
-    this.enableImageSize = false,
-  });
-
-  final MarkdownImageBuilder? imageBuilder;
-  final bool enableImageSize;
+  ImageBuilder();
 
   @override
   bool isBlock(element) => true;
@@ -27,40 +19,22 @@ class ImageBuilder extends MarkdownElementBuilder {
     if (destination.isEmpty) {
       return null;
     }
-    final description = element.attributes['description'];
-    final title = element.attributes['title'];
+    // final description = element.attributes['description'];
+    // final title = element.attributes['title'];
 
     String path;
     double? width;
     double? height;
-    if (enableImageSize) {
-      final parsedDestination = _parseDestination(destination);
-      path = parsedDestination.path;
-      width = parsedDestination.width;
-      height = parsedDestination.height;
-    } else {
-      path = destination;
-    }
+    final parsedDestination = _parseDestination(destination);
+    path = parsedDestination.path;
+    width = parsedDestination.width;
+    height = parsedDestination.height;
 
     final uri = Uri.parse(path);
 
     Widget? child;
-    if (imageBuilder != null) {
-      child = imageBuilder!(
-        uri,
-        _MarkdownImageInfo(
-          title: title,
-          description: description,
-          width: width,
-          height: height,
-        ),
-      );
-    } else {
-      child = _buildImage(uri, width, height);
-    }
-    if (child == null) {
-      return null;
-    }
+
+    child = _buildImage(uri, width, height);
 
     return child;
   }

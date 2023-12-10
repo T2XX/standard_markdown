@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:standard_markdown/src/helpers/inline_wraper.dart';
+import 'package:standard_markdown/standard_markdown.dart';
 
 import '../../global_coltroller.dart';
 import 'builder.dart';
@@ -17,6 +19,41 @@ class HeadlineBuilder extends MarkdownElementBuilder {
       "5": controller.h5TextStyle,
       "6": controller.h6TextStyle,
     }[element.attributes['level']]);
+  }
+
+  Widget? buildWidget(MarkdownTreeElement element, MarkdownTreeElement parent) {
+    final children = element.children;
+    if (children.isEmpty) {
+      return null;
+    }
+
+    if (!isBlock(element)) {
+      return InlineWraper(element.children);
+    }
+
+    final widget = Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        ...children,
+        element.attributes['level'] == '1' ||
+                element.attributes['level'] == '2' ||
+                element.attributes['level'] == '3'
+            ? Divider()
+            : SizedBox()
+      ],
+    );
+
+    final padding = blockPadding(element, parent);
+    if (padding == null || padding == EdgeInsets.zero) {
+      return widget;
+    }
+
+    return Padding(
+      padding: padding,
+      child: widget,
+    );
   }
 
   @override

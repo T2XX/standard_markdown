@@ -1,20 +1,17 @@
 import 'package:dart_markdown/dart_markdown.dart' as md;
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:standard_markdown/src/syntax/latex_Syntax.dart';
 
 import 'builders/builder.dart';
 import 'definition.dart';
 import 'renderer.dart';
 import 'style.dart';
+import 'syntax/latex_Syntax.dart';
 
 class StandardMarkdown extends StatefulWidget {
   const StandardMarkdown(
     this.data, {
     this.styleSheet,
-    this.onTapLink,
     this.listItemMarkerBuilder,
-    this.imageBuilder,
     this.enableTaskList = false,
     this.enableSubscript = false,
     this.enableSuperscript = false,
@@ -22,33 +19,26 @@ class StandardMarkdown extends StatefulWidget {
     this.enableFootnote = false,
     this.enableAutolinkExtension = true,
     this.forceTightList = false,
-    this.enableImageSize = false,
     this.elementBuilders = const [],
     this.syntaxExtensions = const [],
     this.nodesFilter,
-    this.selectable,
-    this.selectionColor,
     this.copyIconBuilder,
     Key? key,
   }) : super(key: key);
 
   final String data;
   final bool enableTaskList;
-  final bool enableImageSize;
   final bool enableSubscript;
   final bool enableSuperscript;
   final bool enableKbd;
   final bool enableFootnote;
   final bool enableAutolinkExtension;
   final bool forceTightList;
-  final MarkdownImageBuilder? imageBuilder;
   final MarkdownStyle? styleSheet;
-  final MarkdownTapLinkCallback? onTapLink;
   final MarkdownListItemMarkerBuilder? listItemMarkerBuilder;
   final List<MarkdownElementBuilder> elementBuilders;
   final List<md.Syntax> syntaxExtensions;
-  final Color? selectionColor;
-  final bool? selectable;
+
   final CopyIconBuilder? copyIconBuilder;
 
   /// A function used to modify the parsed AST nodes.
@@ -78,20 +68,10 @@ class StandardMarkdown extends StatefulWidget {
 class _MarkdownViewerState extends State<StandardMarkdown> {
   @override
   Widget build(BuildContext context) {
-    if (widget.selectable == false) {
-      return _buildMarkdown();
-    } else {
-      return SelectionArea(
-        child: Builder(
-          builder: (context) => _buildMarkdown(
-            selectionRegistrar: SelectionContainer.maybeOf(context),
-          ),
-        ),
-      );
-    }
+    return _buildMarkdown();
   }
 
-  Widget _buildMarkdown({SelectionRegistrar? selectionRegistrar}) {
+  Widget _buildMarkdown() {
     final markdown = md.Markdown(
       enableHtmlBlock: false,
       enableRawHtml: true,
@@ -114,13 +94,8 @@ class _MarkdownViewerState extends State<StandardMarkdown> {
     final renderer = MarkdownRenderer(
         context: context,
         styleSheet: widget.styleSheet ?? const MarkdownStyle(),
-        onTapLink: widget.onTapLink,
-        enableImageSize: widget.enableImageSize,
-        imageBuilder: widget.imageBuilder,
         listItemMarkerBuilder: widget.listItemMarkerBuilder,
         elementBuilders: widget.elementBuilders,
-        selectionColor: widget.selectionColor ?? const Color(0x4a006ff8),
-        selectionRegistrar: selectionRegistrar,
         copyIconBuilder: widget.copyIconBuilder);
 
     List<md.Node> astNodes;

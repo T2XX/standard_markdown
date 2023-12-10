@@ -68,11 +68,7 @@ abstract class MarkdownElementBuilder {
     String text,
     MarkdownTreeElement parent,
   ) =>
-      TextSpan(
-        text: text,
-        style: parent.style,
-        mouseCursor: renderer.mouseCursor,
-      );
+      TextSpan(text: text, style: parent.style);
 
   /// Sets a new [TextAlign] instead of using the default one.
   ///

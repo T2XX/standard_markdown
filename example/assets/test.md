@@ -118,15 +118,6 @@ Hello **Markdown**!
 - [超级链接](https://ld246.com/) - `[超级链接](https://ld246.com)`
 - [username@gmail.com](mailto:username@gmail.com) - `[username@gmail.com](mailto:username@gmail.com)`
 
-### 提及用户
-
-@Vanessa 通过 `@User` 可以在内容中提及用户，被提及的用户将会收到系统通知。
-
-> NOTE:
->
-> 1. @用户名之后需要有一个空格
-> 2. 新手没有艾特的功能权限
-
 ### 表情符号 Emoji
 
 支持大部分标准的表情符号，可使用输入法直接输入，也可手动输入字符格式。通过输入 `:` 触发自动完成，可在个人设置中[设置常用表情](https://ld246.com/settings/function)。
