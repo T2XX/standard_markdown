@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 import 'ast.dart';
 import 'builders/blockquote_builder.dart';
@@ -28,12 +29,20 @@ class MarkdownRenderer implements NodeVisitor {
   MarkdownRenderer({
     BuildContext? context,
     required MarkdownStyle styleSheet,
+    MarkdownTapLinkCallback? onTapLink,
     MarkdownListItemMarkerBuilder? listItemMarkerBuilder,
     MarkdownCheckboxBuilder? checkboxBuilder,
+    MarkdownImageBuilder? imageBuilder,
+    bool enableImageSize = false,
     List<MarkdownElementBuilder> elementBuilders = const [],
     TextAlign? textAlign,
+    Color? selectionColor,
+    SelectionRegistrar? selectionRegistrar,
     CopyIconBuilder? copyIconBuilder,
-  })  : _styleSheet = styleSheet,
+  })  : _selectionColor = selectionColor,
+        _selectionRegistrar = selectionRegistrar,
+        _blockSpacing = styleSheet.blockSpacing,
+        _styleSheet = styleSheet,
         _defaultTextStyle = TextStyle(
           fontSize: 16,
           height: 1.5,
@@ -46,7 +55,16 @@ class MarkdownRenderer implements NodeVisitor {
     final defaultBuilders = [
       HeadlineBuilder(),
       LatexBlockBuilder(),
-      SimpleInlinesBuilder(),
+      SimpleInlinesBuilder(
+        context: context,
+        emphasis: styleSheet.emphasis,
+        strongEmphasis: styleSheet.strongEmphasis,
+        highlight: styleSheet.highlight,
+        strikethrough: styleSheet.strikethrough,
+        subscript: styleSheet.subscript,
+        superscript: styleSheet.superscript,
+        kbd: styleSheet.kbd,
+      ),
       ThematicBreakBuilder(
         color: styleSheet.dividerColor,
         height: styleSheet.dividerHeight,
@@ -110,8 +128,14 @@ class MarkdownRenderer implements NodeVisitor {
   }
 
   final TextAlign _textAlign;
+  final double _blockSpacing;
+  final Color? _selectionColor;
+  final SelectionRegistrar? _selectionRegistrar;
   final MarkdownStyle _styleSheet;
   final TextStyle _defaultTextStyle;
+
+  bool get selectable => _selectionColor != null && _selectionRegistrar != null;
+  MouseCursor? get mouseCursor => selectable ? SystemMouseCursors.text : null;
 
   String? _keepLineEndingsWhen;
   final _gestureRecognizers = <String, GestureRecognizer>{};
@@ -216,7 +240,8 @@ class MarkdownRenderer implements NodeVisitor {
       // _tree.last.children.addIfTrue(
       //   SizedBox(
       //     height: _blockSpacing,
-
+      //     // TODO(Zhiguang): Remove it when this issue is fixed:
+      //     // https://github.com/flutter/flutter/issues/104548
       //     child: selectable
       //         ? const Text(' \n', selectionColor: Colors.transparent)
       //         : null,
@@ -249,7 +274,12 @@ class MarkdownRenderer implements NodeVisitor {
     StrutStyle? strutStyle,
   }) {
     return RichText(
-        strutStyle: strutStyle, text: text, textAlign: textAlign ?? _textAlign);
+      strutStyle: strutStyle,
+      text: text,
+      textAlign: textAlign ?? _textAlign,
+      selectionColor: _selectionColor,
+      selectionRegistrar: _selectionRegistrar,
+    );
   }
 
   /// Merges the [RichText] elements of [widgets] while it is possible.

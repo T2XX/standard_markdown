@@ -1,11 +1,12 @@
 import 'package:dart_markdown/dart_markdown.dart' as md;
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:standard_markdown/src/syntax/latex_Syntax.dart';
 
 import 'builders/builder.dart';
 import 'definition.dart';
 import 'renderer.dart';
 import 'style.dart';
-import 'syntax/latex_Syntax.dart';
 
 class StandardMarkdown extends StatefulWidget {
   const StandardMarkdown(
@@ -22,8 +23,10 @@ class StandardMarkdown extends StatefulWidget {
     this.elementBuilders = const [],
     this.syntaxExtensions = const [],
     this.nodesFilter,
+    this.selectable,
     this.copyIconBuilder,
     Key? key,
+    this.selectionColor,
   }) : super(key: key);
 
   final String data;
@@ -38,7 +41,8 @@ class StandardMarkdown extends StatefulWidget {
   final MarkdownListItemMarkerBuilder? listItemMarkerBuilder;
   final List<MarkdownElementBuilder> elementBuilders;
   final List<md.Syntax> syntaxExtensions;
-
+  final Color? selectionColor;
+  final bool? selectable;
   final CopyIconBuilder? copyIconBuilder;
 
   /// A function used to modify the parsed AST nodes.
@@ -68,10 +72,20 @@ class StandardMarkdown extends StatefulWidget {
 class _MarkdownViewerState extends State<StandardMarkdown> {
   @override
   Widget build(BuildContext context) {
-    return _buildMarkdown();
+    if (widget.selectable == false) {
+      return _buildMarkdown();
+    } else {
+      return SelectionArea(
+        child: Builder(
+          builder: (context) => _buildMarkdown(
+            selectionRegistrar: SelectionContainer.maybeOf(context),
+          ),
+        ),
+      );
+    }
   }
 
-  Widget _buildMarkdown() {
+  Widget _buildMarkdown({SelectionRegistrar? selectionRegistrar}) {
     final markdown = md.Markdown(
       enableHtmlBlock: false,
       enableRawHtml: true,
@@ -96,6 +110,8 @@ class _MarkdownViewerState extends State<StandardMarkdown> {
         styleSheet: widget.styleSheet ?? const MarkdownStyle(),
         listItemMarkerBuilder: widget.listItemMarkerBuilder,
         elementBuilders: widget.elementBuilders,
+        selectionColor: widget.selectionColor ?? const Color(0x4a006ff8),
+        selectionRegistrar: selectionRegistrar,
         copyIconBuilder: widget.copyIconBuilder);
 
     List<md.Node> astNodes;

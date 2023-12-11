@@ -1,21 +1,42 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../global_coltroller.dart';
 import 'builder.dart';
 
-final MarkDownController controller = Get.put(MarkDownController());
-
 class SimpleInlinesBuilder extends MarkdownElementBuilder {
-  SimpleInlinesBuilder()
-      : super(textStyleMap: {
-          'emphasis': controller.emphasisTextStyle.value,
-          'strongEmphasis': controller.strongEmphasisTextStyle.value,
-          'highlight': controller.highlightTextStyle.value,
-          'strikethrough': controller.strikethroughTextStyle.value,
-          'subscript': controller.subscriptTextStyle.value,
-          'superscript': controller.subscriptTextStyle.value,
-          'kbd': controller.kbd.value
+  SimpleInlinesBuilder({
+    super.context,
+    TextStyle? emphasis,
+    TextStyle? strongEmphasis,
+    TextStyle? highlight,
+    TextStyle? strikethrough,
+    TextStyle? subscript,
+    TextStyle? superscript,
+    TextStyle? kbd,
+  }) : super(textStyleMap: {
+          'emphasis': const TextStyle(
+            fontStyle: FontStyle.italic,
+          ).merge(emphasis),
+          'strongEmphasis': const TextStyle(
+            fontWeight: FontWeight.w700,
+          ).merge(strongEmphasis),
+          'highlight': TextStyle(
+            backgroundColor: Get.isDarkMode
+                ? const Color(0xffffbb00)
+                : const Color(0xffffee00),
+          ).merge(highlight),
+          'strikethrough': const TextStyle(
+            color: Color(0xffff6666),
+            decoration: TextDecoration.lineThrough,
+          ).merge(strikethrough),
+          'subscript': const TextStyle(
+            fontFeatures: [FontFeature.subscripts()],
+          ).merge(subscript),
+          'superscript': const TextStyle(
+            fontFeatures: [FontFeature.superscripts()],
+          ).merge(superscript),
+          'kbd': kbd,
         });
 
   @override

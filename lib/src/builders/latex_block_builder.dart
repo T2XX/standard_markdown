@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_math_fork/flutter_math.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 import '../../standard_markdown.dart';
 
 class LatexBlockBuilder extends MarkdownElementBuilder {
@@ -32,19 +33,19 @@ class LatexBlockBuilder extends MarkdownElementBuilder {
                     return Text(textContent);
                   }))));
     } else if (element.type == 'LatexBlock') {
-      return RichText(
-          text: WidgetSpan(
-              child: SizedBox(
-                  width: double.infinity,
-                  height: 18,
-                  child: Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Math.tex(textContent,
-                          textStyle: TextStyle(fontSize: 42),
+      return DefaultTextStyle(
+          style: parent.style!,
+          child: SizedBox(
+              width: double.infinity,
+              height: 18,
+              child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child:
+                      Math.tex(textContent, textStyle: TextStyle(fontSize: 42),
                           onErrorFallback: (error) {
-                        return Text(textContent,
-                            style: TextStyle(color: Colors.red));
-                      })))));
+                    return Text(textContent,
+                        style: TextStyle(color: Colors.red));
+                  }))));
     } else {
       return null;
     }
