@@ -1,6 +1,6 @@
 name: standard_markdown
 description: A flutter markdown package which support GFM/CommonMark standard
-version: 0.0.2
+version: 0.0.3-alpha
 repository: https://github.com/T2XX/standard_markdown
 environment:
   sdk: ^3.1.5
@@ -13,7 +13,7 @@ dependencies:
   flutter_prism: ^0.2.2 # support code highlight
   # markdown_prettier: ^0.1.0-alpha
   flutter_math_fork: ^0.7.2
-  markdown_prettier: ^0.1.0
+  markdown_prettier: ^0.1.0-alpha
 
 dev_dependencies:
   lints: ^2.0.0

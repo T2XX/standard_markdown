@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import '../models/markdown_tree_element.dart';
+// import '../models/markdown_tree_element.dart';
 import 'builder.dart';
 
 class ImageBuilder extends MarkdownElementBuilder {
@@ -96,15 +96,15 @@ class _ParseDestination {
   final double? height;
 }
 
-class _MarkdownImageInfo extends MarkdownImageInfo {
-  _MarkdownImageInfo({
-    String? title,
-    String? description,
-    double? width,
-    double? height,
-  }) : super(
-            title: title,
-            description: description,
-            width: width,
-            height: height);
-}
+// class _MarkdownImageInfo extends MarkdownImageInfo {
+//   _MarkdownImageInfo({
+//     String? title,
+//     String? description,
+//     double? width,
+//     double? height,
+//   }) : super(
+//             title: title,
+//             description: description,
+//             width: width,
+//             height: height);
+// }
