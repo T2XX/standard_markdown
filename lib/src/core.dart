@@ -1,5 +1,6 @@
 import 'package:dart_markdown/dart_markdown.dart' as md;
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 import 'builders/builder.dart';
 import 'definition.dart';
@@ -13,7 +14,6 @@ class StandardMarkdown extends StatefulWidget {
     this.styleSheet,
     this.listItemMarkerBuilder,
     this.enableTaskList = false,
-    this.enableSubscript = false,
     this.enableSuperscript = false,
     this.enableKbd = false,
     this.enableFootnote = false,
@@ -22,13 +22,14 @@ class StandardMarkdown extends StatefulWidget {
     this.elementBuilders = const [],
     this.syntaxExtensions = const [],
     this.nodesFilter,
+    this.selectable,
     this.copyIconBuilder,
     Key? key,
+    this.selectionColor,
   }) : super(key: key);
 
   final String data;
   final bool enableTaskList;
-  final bool enableSubscript;
   final bool enableSuperscript;
   final bool enableKbd;
   final bool enableFootnote;
@@ -38,7 +39,8 @@ class StandardMarkdown extends StatefulWidget {
   final MarkdownListItemMarkerBuilder? listItemMarkerBuilder;
   final List<MarkdownElementBuilder> elementBuilders;
   final List<md.Syntax> syntaxExtensions;
-
+  final Color? selectionColor;
+  final bool? selectable;
   final CopyIconBuilder? copyIconBuilder;
 
   /// A function used to modify the parsed AST nodes.
@@ -68,17 +70,27 @@ class StandardMarkdown extends StatefulWidget {
 class _MarkdownViewerState extends State<StandardMarkdown> {
   @override
   Widget build(BuildContext context) {
-    return _buildMarkdown();
+    if (widget.selectable == false) {
+      return _buildMarkdown();
+    } else {
+      return SelectionArea(
+        child: Builder(
+          builder: (context) => _buildMarkdown(
+            selectionRegistrar: SelectionContainer.maybeOf(context),
+          ),
+        ),
+      );
+    }
   }
 
-  Widget _buildMarkdown() {
+  Widget _buildMarkdown({SelectionRegistrar? selectionRegistrar}) {
     final markdown = md.Markdown(
       enableHtmlBlock: false,
       enableRawHtml: true,
       enableHighlight: true,
       enableStrikethrough: true,
       enableTaskList: widget.enableTaskList,
-      enableSubscript: widget.enableSubscript,
+      enableSubscript: true,
       enableSuperscript: widget.enableSuperscript,
       enableKbd: widget.enableKbd,
       enableFootnote: widget.enableFootnote,
@@ -96,6 +108,8 @@ class _MarkdownViewerState extends State<StandardMarkdown> {
         styleSheet: widget.styleSheet ?? const MarkdownStyle(),
         listItemMarkerBuilder: widget.listItemMarkerBuilder,
         elementBuilders: widget.elementBuilders,
+        selectionColor: widget.selectionColor ?? const Color(0x4a006ff8),
+        selectionRegistrar: selectionRegistrar,
         copyIconBuilder: widget.copyIconBuilder);
 
     List<md.Node> astNodes;

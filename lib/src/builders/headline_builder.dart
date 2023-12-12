@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:standard_markdown/src/helpers/inline_wraper.dart';
-import 'package:standard_markdown/standard_markdown.dart';
 
 import '../../global_coltroller.dart';
-import 'builder.dart';
+import '../../standard_markdown.dart';
+import '../helpers/inline_wraper.dart';
 
 class HeadlineBuilder extends MarkdownElementBuilder {
   HeadlineBuilder();
@@ -21,6 +20,7 @@ class HeadlineBuilder extends MarkdownElementBuilder {
     }[element.attributes['level']]);
   }
 
+  @override
   Widget? buildWidget(MarkdownTreeElement element, MarkdownTreeElement parent) {
     final children = element.children;
     if (children.isEmpty) {

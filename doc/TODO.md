@@ -38,4 +38,4 @@ Support three editing modes
 - [x] loadFromString
 - [ ] loadFromselectFile
 - [ ] a controller control all
-- [ ] select in material 3
+- [x] select in material 3
