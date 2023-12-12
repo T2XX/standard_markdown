@@ -41,7 +41,6 @@ class MarkdownRenderer implements NodeVisitor {
     CopyIconBuilder? copyIconBuilder,
   })  : _selectionColor = selectionColor,
         _selectionRegistrar = selectionRegistrar,
-        _blockSpacing = styleSheet.blockSpacing,
         _styleSheet = styleSheet,
         _defaultTextStyle = TextStyle(
           fontSize: 16,
@@ -128,7 +127,6 @@ class MarkdownRenderer implements NodeVisitor {
   }
 
   final TextAlign _textAlign;
-  final double _blockSpacing;
   final Color? _selectionColor;
   final SelectionRegistrar? _selectionRegistrar;
   final MarkdownStyle _styleSheet;
@@ -236,19 +234,6 @@ class MarkdownRenderer implements NodeVisitor {
     final widget = builder.buildWidget(current, parent);
     final isBlock = builder.isBlock(current);
     if (widget != null) {
-      // Add spacing between block elements
-      // _tree.last.children.addIfTrue(
-      //   SizedBox(
-      //     height: _blockSpacing,
-      //     // TODO(Zhiguang): Remove it when this issue is fixed:
-      //     // https://github.com/flutter/flutter/issues/104548
-      //     child: selectable
-      //         ? const Text(' \n', selectionColor: Colors.transparent)
-      //         : null,
-      //   ),
-      //   isBlock && _tree.last.children.isNotEmpty,
-      // );
-
       if (widget is InlineWraper) {
         parent.children.addAll(widget.children);
       } else {

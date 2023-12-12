@@ -1,3 +1,7 @@
+## 0.0.3
+
+- add select area
+
 ## 0.0.3-alpha
 
 - fix latex height

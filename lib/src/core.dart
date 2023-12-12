@@ -1,12 +1,12 @@
 import 'package:dart_markdown/dart_markdown.dart' as md;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:standard_markdown/src/syntax/latex_Syntax.dart';
 
 import 'builders/builder.dart';
 import 'definition.dart';
 import 'renderer.dart';
 import 'style.dart';
+import 'syntax/latex_Syntax.dart';
 
 class StandardMarkdown extends StatefulWidget {
   const StandardMarkdown(
@@ -14,7 +14,6 @@ class StandardMarkdown extends StatefulWidget {
     this.styleSheet,
     this.listItemMarkerBuilder,
     this.enableTaskList = false,
-    this.enableSubscript = false,
     this.enableSuperscript = false,
     this.enableKbd = false,
     this.enableFootnote = false,
@@ -31,7 +30,6 @@ class StandardMarkdown extends StatefulWidget {
 
   final String data;
   final bool enableTaskList;
-  final bool enableSubscript;
   final bool enableSuperscript;
   final bool enableKbd;
   final bool enableFootnote;
@@ -92,7 +90,7 @@ class _MarkdownViewerState extends State<StandardMarkdown> {
       enableHighlight: true,
       enableStrikethrough: true,
       enableTaskList: widget.enableTaskList,
-      enableSubscript: widget.enableSubscript,
+      enableSubscript: true,
       enableSuperscript: widget.enableSuperscript,
       enableKbd: widget.enableKbd,
       enableFootnote: widget.enableFootnote,

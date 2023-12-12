@@ -267,7 +267,7 @@ public classHelloWorld{
 多行公式块：
 
 $$
-123123\pm
+123123\pm 你
 $$
 
 行内公式：
@@ -312,7 +312,6 @@ class MyHomePage extends StatelessWidget {
             markdown,
             enableTaskList: true,
             enableSuperscript: true,
-            enableSubscript: true,
             enableFootnote: true,
             enableKbd: true,
             syntaxExtensions: [ExampleSyntax()],

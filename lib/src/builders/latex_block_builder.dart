@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_math_fork/flutter_math.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
 import '../../standard_markdown.dart';
 
 class LatexBlockBuilder extends MarkdownElementBuilder {
