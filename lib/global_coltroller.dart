@@ -58,13 +58,13 @@ class MarkDownController extends GetxController {
   TextStyle h3TextStyle = TextStyle(fontSize: 16 * 1.6);
   TextStyle h4TextStyle = TextStyle(fontSize: 16 * 1.4);
   TextStyle h5TextStyle = TextStyle(fontSize: 16 * 1.2);
-  TextStyle h6TextStyle = TextStyle(fontSize: 16);
-  EdgeInsets h1Padding = EdgeInsets.only(bottom: 8);
-  EdgeInsets h2Padding = EdgeInsets.only(bottom: 7);
+  TextStyle h6TextStyle = TextStyle(fontSize: 16 * 1.1);
+  EdgeInsets h1Padding = EdgeInsets.only(bottom: 6);
+  EdgeInsets h2Padding = EdgeInsets.only(bottom: 6);
   EdgeInsets h3Padding = EdgeInsets.only(bottom: 6);
-  EdgeInsets h4Padding = EdgeInsets.only(bottom: 5);
+  EdgeInsets h4Padding = EdgeInsets.only(bottom: 4);
   EdgeInsets h5Padding = EdgeInsets.only(bottom: 4);
-  EdgeInsets h6Padding = EdgeInsets.only(bottom: 3);
+  EdgeInsets h6Padding = EdgeInsets.only(bottom: 4);
   /* Link Config */
   Function(String? href, String? title) linkTap = (href, title) {
     print({href, title});

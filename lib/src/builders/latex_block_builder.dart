@@ -32,19 +32,18 @@ class LatexBlockBuilder extends MarkdownElementBuilder {
                     return Text(textContent);
                   }))));
     } else if (element.type == 'LatexBlock') {
-      return DefaultTextStyle(
-          style: parent.style!,
-          child: SizedBox(
-              width: double.infinity,
-              height: 18,
-              child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child:
-                      Math.tex(textContent, textStyle: TextStyle(fontSize: 42),
+      return RichText(
+          text: WidgetSpan(
+              child: SizedBox(
+                  width: double.infinity,
+                  height: 18,
+                  child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Math.tex(textContent, textStyle: parentStyle,
                           onErrorFallback: (error) {
-                    return Text(textContent,
-                        style: TextStyle(color: Colors.red));
-                  }))));
+                        return Text(textContent,
+                            style: TextStyle(color: Colors.red));
+                      })))));
     } else {
       return null;
     }

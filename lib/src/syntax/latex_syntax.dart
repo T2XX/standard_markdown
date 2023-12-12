@@ -22,7 +22,7 @@ class LatexBlockSyntax extends InlineSyntax {
   InlineObject? parse(InlineParser parser, Match match) {
     final marker = parser.consumeBy(match[0]!.length);
     final content = marker.first.text;
-    return InlineElement('LatexInline',
+    return InlineElement('LatexBlock',
         children: marker.map(Text.fromSpan).toList(),
         end: marker.first.end,
         start: marker.first.start,

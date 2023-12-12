@@ -267,7 +267,7 @@ public classHelloWorld{
 多行公式块：
 
 $$
-123123\pm 你
+123123\pm
 $$
 
 行内公式：

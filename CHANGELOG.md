@@ -1,3 +1,7 @@
+## 0.0.4
+
+- fix bug on latex alignment
+  
 ## 0.0.3
 
 - add select area
