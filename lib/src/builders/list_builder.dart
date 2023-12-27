@@ -1,32 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../global_coltroller.dart';
 import '../ast.dart';
 import '../definition.dart';
 import 'builder.dart';
+import 'link_builder.dart';
 
 /// A builder to create list.
 class ListBuilder extends MarkdownElementBuilder {
   ListBuilder({
     TextStyle? list,
     TextStyle? listItem,
-    this.listItemMarker,
-    this.listItemMarkerTrailingSpace,
     required this.listItemMinIndent,
     this.checkbox,
-    this.listItemMarkerBuilder,
     this.paragraphPadding,
+    required this.controller,
   }) : super(textStyleMap: {
           'orderedList': list,
           'bulletList': list,
           'listItem': listItem,
         });
-
-  final TextStyle? listItemMarker;
+  final MarkDownController controller;
   final ButtonStyle? checkbox;
-  final double? listItemMarkerTrailingSpace;
   final double? listItemMinIndent;
-  final MarkdownListItemMarkerBuilder? listItemMarkerBuilder;
   final EdgeInsets? paragraphPadding;
 
   @override
@@ -78,7 +75,7 @@ class ListBuilder extends MarkdownElementBuilder {
           child: Align(
             child: Padding(
               padding: EdgeInsets.only(
-                right: listItemMarkerTrailingSpace ?? 12.0,
+                right: controller.listItemMarkerTrailingSpace,
               ),
               child: itemMarker,
             ),
@@ -110,28 +107,8 @@ class ListBuilder extends MarkdownElementBuilder {
     final listType = type == 'bulletList'
         ? MarkdownListType.unordered
         : MarkdownListType.ordered;
-
-    if (listItemMarkerBuilder != null) {
-      return listItemMarkerBuilder!(listType, number);
-    }
-
-    // Return a `RichText` to make the makers unselectable.
-    return RichText(
-      text: TextSpan(
-        text: listType == MarkdownListType.unordered ? '\u2022' : '$number.',
-        style: TextStyle(
-          color: listItemStyle?.color?.withOpacity(0.75) ?? Colors.black,
-          fontSize: listType == MarkdownListType.unordered
-              ? (listItemStyle?.fontSize ?? 16) * 1.4
-              : (listItemStyle?.fontSize ?? 16) * 0.96,
-        ).merge(listItemMarker),
-      ),
-      strutStyle: StrutStyle(
-        height: listItemStyle?.height,
-        forceStrutHeight: true,
-      ),
-      textAlign: TextAlign.right,
-    );
+    return controller.markdownListItemMarkerBuilder(
+        listType, number, listItemStyle!);
   }
 
   Widget _buildCheckbox(bool checked, TextStyle? listItemStyle) {

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'extension.dart';
 import 'package:standard_markdown/standard_markdown.dart';
+import 'package:standard_markdown/global_coltroller.dart';
 
 const markdown = r'''
 # I'm h1 _sd_
@@ -291,12 +293,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData.light(useMaterial3: true),
-      darkTheme: ThemeData.dark(),
-      title: 'MarkdownViewer Demo',
-      debugShowCheckedModeBanner: false,
-      home: const MyHomePage(),
-    );
+        theme: ThemeData.light(useMaterial3: true),
+        darkTheme: ThemeData.dark(),
+        title: 'MarkdownViewer Demo',
+        debugShowCheckedModeBanner: false,
+        home: const MyHomePage());
   }
 }
 
@@ -305,31 +306,14 @@ class MyHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final MarkDownController controller = Get.put(MarkDownController());
+    controller.loadFromSring(markdown, false);
+    controller.markdownSyntaxList.add(ExampleSyntax());
+    controller.elementBuilders.add(ExampleBuilder());
     return Scaffold(
         appBar: AppBar(title: const Text('MarkdownViewer Demo')),
-        body: ListView(padding: const EdgeInsets.all(20), children: [
-          StandardMarkdown(
-            markdown,
-            enableTaskList: true,
-            enableSuperscript: true,
-            enableFootnote: true,
-            enableKbd: true,
-            syntaxExtensions: [ExampleSyntax()],
-            elementBuilders: [
-              ExampleBuilder(),
-            ],
-            styleSheet: const MarkdownStyle(
-              listItemMarkerTrailingSpace: 12,
-              codeSpan: TextStyle(
-                fontFamily: 'RobotoMono',
-              ),
-              codeBlock: TextStyle(
-                fontSize: 14,
-                letterSpacing: -0.3,
-                fontFamily: 'RobotoMono',
-              ),
-            ),
-          )
-        ]));
+        body: ListView(
+            padding: const EdgeInsets.all(20),
+            children: [StandardMarkdown(controller: controller)]));
   }
 }

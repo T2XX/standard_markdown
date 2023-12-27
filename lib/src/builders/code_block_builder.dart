@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_prism/flutter_prism.dart';
 import 'package:get/get.dart';
 
+import '../../global_coltroller.dart';
 import '../definition.dart';
-import '../widgets/copy_button.dart';
 import 'builder.dart';
 
 class CodeBlockBuilder extends MarkdownElementBuilder {
@@ -12,8 +12,7 @@ class CodeBlockBuilder extends MarkdownElementBuilder {
     super.context,
     this.padding,
     this.decoration,
-    this.copyIconBuilder,
-    this.copyIconColor,
+    required this.controller,
   }) : super(
             textStyle: TextStyle(
           color: Get.isDarkMode
@@ -23,8 +22,7 @@ class CodeBlockBuilder extends MarkdownElementBuilder {
 
   final EdgeInsets? padding;
   final BoxDecoration? decoration;
-  final CopyIconBuilder? copyIconBuilder;
-  final Color? copyIconColor;
+  final MarkDownController controller;
 
   @override
   final matchTypes = ['codeBlock'];
@@ -84,14 +82,9 @@ class CodeBlockBuilder extends MarkdownElementBuilder {
         children: [
           textWidget,
           Positioned(
-            right: 0,
-            top: 0,
-            child: CopyButton(
-              textWidget,
-              iconColor: copyIconColor,
-              iconBuilder: copyIconBuilder,
-            ),
-          ),
+              right: 0,
+              top: 0,
+              child: controller.copyIconBuilder(textWidget.toString()))
         ],
       );
     } else {

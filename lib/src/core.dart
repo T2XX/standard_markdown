@@ -2,46 +2,11 @@ import 'package:dart_markdown/dart_markdown.dart' as md;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
-import 'builders/builder.dart';
-import 'definition.dart';
+import '../global_coltroller.dart';
 import 'renderer.dart';
-import 'style.dart';
-import 'syntax/latex_Syntax.dart';
 
-class StandardMarkdown extends StatefulWidget {
-  const StandardMarkdown(
-    this.data, {
-    this.styleSheet,
-    this.listItemMarkerBuilder,
-    this.enableTaskList = false,
-    this.enableSuperscript = false,
-    this.enableKbd = false,
-    this.enableFootnote = false,
-    this.enableAutolinkExtension = true,
-    this.forceTightList = false,
-    this.elementBuilders = const [],
-    this.syntaxExtensions = const [],
-    this.nodesFilter,
-    this.selectable,
-    this.copyIconBuilder,
-    Key? key,
-    this.selectionColor,
-  }) : super(key: key);
-
-  final String data;
-  final bool enableTaskList;
-  final bool enableSuperscript;
-  final bool enableKbd;
-  final bool enableFootnote;
-  final bool enableAutolinkExtension;
-  final bool forceTightList;
-  final MarkdownStyle? styleSheet;
-  final MarkdownListItemMarkerBuilder? listItemMarkerBuilder;
-  final List<MarkdownElementBuilder> elementBuilders;
-  final List<md.Syntax> syntaxExtensions;
-  final Color? selectionColor;
-  final bool? selectable;
-  final CopyIconBuilder? copyIconBuilder;
+class StandardMarkdown extends StatelessWidget {
+  StandardMarkdown({super.key, required this.controller});
 
   /// A function used to modify the parsed AST nodes.
   ///
@@ -61,75 +26,55 @@ class StandardMarkdown extends StatefulWidget {
   ///   ];
   /// }
   /// ```
-  final List<md.Node> Function(List<md.Node> nodes)? nodesFilter;
+  final MarkDownController controller;
 
-  @override
-  State<StandardMarkdown> createState() => _MarkdownViewerState();
-}
-
-class _MarkdownViewerState extends State<StandardMarkdown> {
   @override
   Widget build(BuildContext context) {
-    if (widget.selectable == false) {
-      return _buildMarkdown();
-    } else {
+    if (controller.selectable.value) {
       return SelectionArea(
-        child: Builder(
-          builder: (context) => _buildMarkdown(
-            selectionRegistrar: SelectionContainer.maybeOf(context),
-          ),
-        ),
-      );
+          child: Builder(
+              builder: (context) => _buildMarkdown(
+                  context: context,
+                  selectionRegistrar: SelectionContainer.maybeOf(context))));
+    } else {
+      return _buildMarkdown(context: context);
     }
   }
 
-  Widget _buildMarkdown({SelectionRegistrar? selectionRegistrar}) {
+  Widget _buildMarkdown(
+      {required BuildContext context, SelectionRegistrar? selectionRegistrar}) {
     final markdown = md.Markdown(
-      enableHtmlBlock: false,
-      enableRawHtml: true,
-      enableHighlight: true,
-      enableStrikethrough: true,
-      enableTaskList: widget.enableTaskList,
-      enableSubscript: true,
-      enableSuperscript: widget.enableSuperscript,
-      enableKbd: widget.enableKbd,
-      enableFootnote: widget.enableFootnote,
-      enableAutolinkExtension: widget.enableAutolinkExtension,
-      forceTightList: widget.forceTightList,
-      extensions: [
-        LatexBlockSyntax(),
-        LatexInlineSyntax(),
-        ...widget.syntaxExtensions
-      ],
-    );
+        enableHtmlBlock: false,
+        enableRawHtml: true,
+        enableHighlight: true,
+        enableStrikethrough: true,
+        enableTaskList: controller.enableTaskList,
+        enableSubscript: true,
+        enableSuperscript: controller.enableSuperscript,
+        enableKbd: controller.enableKbd,
+        enableFootnote: controller.enableFootnote,
+        enableAutolinkExtension: controller.enableAutolinkExtension,
+        forceTightList: controller.forceTightList,
+        extensions: controller.markdownSyntaxList);
 
     final renderer = MarkdownRenderer(
         context: context,
-        styleSheet: widget.styleSheet ?? const MarkdownStyle(),
-        listItemMarkerBuilder: widget.listItemMarkerBuilder,
-        elementBuilders: widget.elementBuilders,
-        selectionColor: widget.selectionColor ?? const Color(0x4a006ff8),
         selectionRegistrar: selectionRegistrar,
-        copyIconBuilder: widget.copyIconBuilder);
+        controller: controller);
 
     List<md.Node> astNodes;
-    astNodes = markdown.parse(widget.data);
 
     try {
-      astNodes = markdown.parse(widget.data);
-      if (widget.nodesFilter != null) {
-        astNodes = widget.nodesFilter!(astNodes);
+      astNodes = markdown.parse(controller.data);
+      if (controller.nodesFilter != null) {
+        astNodes = controller.nodesFilter!(astNodes);
       }
     } catch (_) {
       // Render the entire text as a paragraph if parse fails.
-      final textNode = md.Text.fromString(widget.data);
+      final textNode = md.Text.fromString(controller.data);
       astNodes = [
-        md.BlockElement(
-          'paragraph',
-          start: textNode.start,
-          end: textNode.end,
-          children: [textNode],
-        ),
+        md.BlockElement('paragraph',
+            start: textNode.start, end: textNode.end, children: [textNode]),
       ];
     }
 

@@ -15,12 +15,6 @@ typedef MarkdownTapLinkCallback = void Function(
   String? title,
 );
 
-/// Signature for custom list item marker widget.
-typedef MarkdownListItemMarkerBuilder = Widget Function(
-  MarkdownListType style,
-  String? number,
-);
-
 /// Signature for custom checkbox widget.
 typedef MarkdownCheckboxBuilder = Widget Function(bool checked);
 

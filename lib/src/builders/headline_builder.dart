@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 import '../../global_coltroller.dart';
 import '../../standard_markdown.dart';
 import '../helpers/inline_wraper.dart';
 
 class HeadlineBuilder extends MarkdownElementBuilder {
-  HeadlineBuilder();
+  HeadlineBuilder({required this.controller});
+  final MarkDownController controller;
 
   @override
   TextStyle? buildTextStyle(element, defaultStyle) {
@@ -58,7 +58,6 @@ class HeadlineBuilder extends MarkdownElementBuilder {
 
   @override
   final matchTypes = ['headline'];
-  final MarkDownController controller = Get.put(MarkDownController());
 
   @override
   EdgeInsets? blockPadding(element, parent) => {
