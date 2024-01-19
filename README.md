@@ -2,6 +2,7 @@
 
 A flutter markdown package which support GFM/CommonMark standard
 
+![](https://raw.githubusercontent.com/T2XX/standard_markdown/dev/doc/priview.png)
 # How To Use
 
 ```dart
