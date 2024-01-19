@@ -1,7 +1,7 @@
-Support three editing modes
+Support editing modes
 
 - [ ] Instant rendering (ir)
-- [x] Split view (sv)
+- [x] Split view (sv) 
 
 #### All CommonMark syntax
 
@@ -29,13 +29,11 @@ Support three editing modes
 
 - [ ] Footnote
 - [ ] search
-- [ ] formate
+- [x] formate
 - [ ] ToC
-- [ ] Latex/KaTex
+- [x] Latex/KaTex
 - [ ] ECharts
-- [x] Easy to use (controller controls everything)
-- [ ] toolbar
-- [x] loadFromString
-- [ ] loadFromselectFile
-- [ ] a controller control all
+- [x] Easy to use
+- [x] toolbar
+- [x] a controller control all
 - [x] select in material 3

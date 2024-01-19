@@ -5,13 +5,16 @@ A flutter markdown package which support GFM/CommonMark standard
 # How To Use
 
 ```dart
-import 'package:standard_markdown/standard_markdown.dart'; // import package
-StandardMarkdown(markdown) // use Widget
+import 'package:standard_markdown/standard_markdown.dart';
+            StandardMarkdown(
+            oninit: (config) {
+              
+            },
+            mode: 0,
+            toolbar: true,
+            selectable: true,
+            data: editingController)
 ```
-
-# TODO
-
-It will be finish before 1.0.0 stable
 
 ## Support editing modes
 
@@ -36,20 +39,19 @@ It will be finish before 1.0.0 stable
 ## All GFM syntax
 
 - [x] Table
-- [x] Task list item (unhandle click change check)
+- [x] Task list item (unhandle click change check state)
 - [x] Strikethrough
 - [x] Automatic link
 
 ## Other
 
-- [x] Footnote
+- [ ] Footnote
 - [ ] search
-- [ ] formate
+- [x] formate markdown
 - [ ] ToC
-- [x] Latex/KaTex(`$`and `$$`)
-- [ ] ECharts(use in ` ``` `block)
-- [ ] Easy to use (controller controls everything)
-- [ ] toolbar
-- [ ] loadFromString
-- [ ] loadFromselectFile
-- [ ] rebuild by getx controller
+- [x] Latex/KaTex
+- [ ] ECharts
+- [x] Easy to use
+- [x] toolbar
+- [x] a controller control all
+- [x] select in material 3

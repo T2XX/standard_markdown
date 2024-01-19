@@ -1,3 +1,8 @@
+## 0.0.5
+
+- fix bug on complex latex
+- add toolbar
+
 ## 0.0.4
 
 - fix bug on latex alignment

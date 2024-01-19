@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:standard_markdown/standard_markdown.dart';
 
 const markdown = r'''

@@ -197,30 +197,92 @@ class MarkDownConfig extends GetxController {
         }
         break;
       case "Link":
+        data.text =
+            "${data.text.substring(0, selectStart)}[](${data.text.substring(selectStart, selectEnd)})${data.text.substring(selectEnd, data.text.length)}";
+        data.selection =
+            TextSelection.fromPosition(TextPosition(offset: selectStart + 1));
+        focusNode.requestFocus();
+
+        break;
+      case "Check":
         final String destination = data.text.substring(selectStart, selectEnd);
-        final RegExpMatch? match = RegExp("_(.*?)_").firstMatch(destination);
+        final RegExpMatch? match =
+            RegExp(r"^(- \[ \] )").firstMatch(destination);
         if (match != null) {
-          data.text = data.text.substring(0, selectStart + match.start) +
-              destination.substring(match.start + 1, match.end - 1) +
-              data.text.substring(
-                  selectEnd - destination.length + match.end, data.text.length);
+          data.text =
+              "${data.text.substring(0, selectStart)}${data.text.substring(selectStart + (match.end - match.start), data.text.length)}";
           data.selection = TextSelection(
-              baseOffset: selectStart, extentOffset: selectEnd - 2);
+              baseOffset: selectStart,
+              extentOffset: selectEnd - (match.end - match.start));
           focusNode.requestFocus();
         } else {
           data.text =
-              "${data.text.substring(0, selectStart)}_${data.text.substring(selectStart, selectEnd)}_${data.text.substring(selectEnd, data.text.length)}";
+              "${data.text.substring(0, selectStart)}- [ ] ${data.text.substring(selectStart, data.text.length)}";
           data.selection = TextSelection(
-              baseOffset: selectStart, extentOffset: selectEnd + 2);
+              baseOffset: selectStart + 6, extentOffset: selectEnd + 6);
           focusNode.requestFocus();
         }
         break;
-      case "Italic":
+      case "Uncheck":
         final String destination = data.text.substring(selectStart, selectEnd);
-        final RegExpMatch? match = RegExp("_(.*?)_").firstMatch(destination);
+        final RegExpMatch? matcha =
+            RegExp(r"^(- \[x\] )").firstMatch(destination);
+        final RegExpMatch? matchA =
+            RegExp(r"^(- \[X\] )").firstMatch(destination);
+        if (matchA != null) {
+          data.text =
+              "${data.text.substring(0, selectStart)}${data.text.substring(selectStart + (matchA.end - matchA.start), data.text.length)}";
+          data.selection = TextSelection(
+              baseOffset: selectStart,
+              extentOffset: selectEnd - (matchA.end - matchA.start));
+          focusNode.requestFocus();
+        } else if (matcha != null) {
+          data.text =
+              "${data.text.substring(0, selectStart)}${data.text.substring(selectStart + (matcha.end - matcha.start), data.text.length)}";
+          data.selection = TextSelection(
+              baseOffset: selectStart,
+              extentOffset: selectEnd - (matcha.end - matcha.start));
+        } else {
+          data.text =
+              "${data.text.substring(0, selectStart)}- [x] ${data.text.substring(selectStart, data.text.length)}";
+          data.selection = TextSelection(
+              baseOffset: selectStart + 6, extentOffset: selectEnd + 6);
+          focusNode.requestFocus();
+        }
+        break;
+      case "Photo":
+        data.text =
+            "${data.text.substring(0, selectStart)}![](${data.text.substring(selectStart, selectEnd)})${data.text.substring(selectEnd, data.text.length)}";
+        data.selection =
+            TextSelection.fromPosition(TextPosition(offset: selectStart + 2));
+        focusNode.requestFocus();
+        break;
+      case "Code":
+        final String destination = data.text.substring(selectStart, selectEnd);
+        final RegExpMatch? match =
+            RegExp(r"```[.\s\S]+```").firstMatch(destination);
         if (match != null) {
           data.text = data.text.substring(0, selectStart + match.start) +
-              destination.substring(match.start + 1, match.end - 1) +
+              destination.substring(match.start + 3, match.end - 3) +
+              data.text.substring(
+                  selectEnd - destination.length + match.end, data.text.length);
+          data.selection = TextSelection(
+              baseOffset: selectStart, extentOffset: selectEnd - 6);
+          focusNode.requestFocus();
+        } else {
+          data.text =
+              "${data.text.substring(0, selectStart)}```${data.text.substring(selectStart, selectEnd)}```${data.text.substring(selectEnd, data.text.length)}";
+          data.selection = TextSelection(
+              baseOffset: selectStart, extentOffset: selectEnd + 6);
+          focusNode.requestFocus();
+        }
+        break;
+      case "BulletList":
+        final String destination = data.text.substring(selectStart, selectEnd);
+        final RegExpMatch? match = RegExp("- ").firstMatch(destination);
+        if (match != null) {
+          data.text = data.text.substring(0, selectStart + match.start) +
+              destination.substring(match.start + 2, match.end) +
               data.text.substring(
                   selectEnd - destination.length + match.end, data.text.length);
           data.selection = TextSelection(
@@ -228,9 +290,28 @@ class MarkDownConfig extends GetxController {
           focusNode.requestFocus();
         } else {
           data.text =
-              "${data.text.substring(0, selectStart)}_${data.text.substring(selectStart, selectEnd)}_${data.text.substring(selectEnd, data.text.length)}";
+              "${data.text.substring(0, selectStart)}- ${data.text.substring(selectStart, data.text.length)}";
           data.selection = TextSelection(
-              baseOffset: selectStart, extentOffset: selectEnd + 2);
+              baseOffset: selectStart + 2, extentOffset: selectEnd + 2);
+          focusNode.requestFocus();
+        }
+        break;
+      case "NumbertList":
+        final String destination = data.text.substring(selectStart, selectEnd);
+        final Iterable<RegExpMatch> match =
+            RegExp(r"(?:[0-9]+\.)").allMatches(destination);
+        if (match.isEmpty) {
+          data.text =
+              "${data.text.substring(0, selectStart)}1. ${data.text.substring(selectStart, data.text.length)}";
+          data.selection = TextSelection(
+              baseOffset: selectStart + 3, extentOffset: selectEnd + 3);
+          focusNode.requestFocus();
+        } else {
+          match.last;
+          data.text =
+              "${data.text.substring(0, selectStart)}- ${data.text.substring(selectStart, data.text.length)}";
+          data.selection = TextSelection(
+              baseOffset: selectStart + 2, extentOffset: selectEnd + 2);
           focusNode.requestFocus();
         }
         break;

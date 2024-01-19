@@ -77,16 +77,31 @@ class _MarkdownToolbarState extends State<MarkdownToolbar> {
                     widget.data, "Link", widget.focusNode),
                 icon: Icon(Icons.link)),
             IconButton(
-                onPressed: () {}, icon: Icon(Icons.check_box_outline_blank)),
-            IconButton(onPressed: () {}, icon: Icon(Icons.check_box)),
+                onPressed: () => controller.toolbarFormat(
+                    widget.data, "Check", widget.focusNode),
+                icon: Icon(Icons.check_box_outline_blank)),
+            IconButton(
+                onPressed: () => controller.toolbarFormat(
+                    widget.data, "Uncheck", widget.focusNode),
+                icon: Icon(Icons.check_box)),
           ]),
           Row(children: [
-            IconButton(onPressed: () {}, icon: Icon(Icons.photo)),
-            IconButton(onPressed: () {}, icon: Icon(Icons.code)),
             IconButton(
-                onPressed: () {}, icon: Icon(Icons.format_list_bulleted)),
+                onPressed: () => controller.toolbarFormat(
+                    widget.data, "Photo", widget.focusNode),
+                icon: Icon(Icons.photo)),
             IconButton(
-                onPressed: () {}, icon: Icon(Icons.format_list_numbered)),
+                onPressed: () => controller.toolbarFormat(
+                    widget.data, "Code", widget.focusNode),
+                icon: Icon(Icons.code)),
+            IconButton(
+                onPressed: () => controller.toolbarFormat(
+                    widget.data, "BulletList", widget.focusNode),
+                icon: Icon(Icons.format_list_bulleted)),
+            IconButton(
+                onPressed: () => controller.toolbarFormat(
+                    widget.data, "NumbertList", widget.focusNode),
+                icon: Icon(Icons.format_list_numbered)),
             IconButton(onPressed: () {}, icon: Icon(Icons.format_quote)),
             IconButton(onPressed: () {}, icon: Icon(Icons.horizontal_rule)),
           ]),
