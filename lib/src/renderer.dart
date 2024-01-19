@@ -1,7 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-
 import '../global_coltroller.dart';
 import 'ast.dart';
 import 'builders/blockquote_builder.dart';
@@ -18,7 +17,6 @@ import 'builders/paragraph_builder.dart';
 import 'builders/simple_inlines_builder.dart';
 import 'builders/table_bilder.dart';
 import 'builders/thematic_break_builder.dart';
-import 'definition.dart';
 import 'extensions.dart';
 import 'helpers/inline_wraper.dart';
 import 'helpers/merge_rich_text.dart';
@@ -26,93 +24,24 @@ import 'models/markdown_tree_element.dart';
 import 'transformer.dart';
 
 class MarkdownRenderer implements NodeVisitor {
-  MarkdownRenderer({
-    BuildContext? context,
-    required this.controller,
-    MarkdownTapLinkCallback? onTapLink,
-    MarkdownCheckboxBuilder? checkboxBuilder,
-    MarkdownImageBuilder? imageBuilder,
-    bool enableImageSize = false,
-    TextAlign? textAlign,
-    SelectionRegistrar? selectionRegistrar,
-  })  : _selectionRegistrar = selectionRegistrar,
-        _defaultTextStyle = TextStyle(
-          fontSize: 16,
-          height: 1.5,
-          color: (context != null
-                  ? Theme.of(context).textTheme.bodyMedium?.color
-                  : null) ??
-              const Color(0xff333333),
-        ),
-        _textAlign = textAlign ?? TextAlign.start {
+  MarkdownRenderer(
+      {required this.context,
+      required this.controller,
+      this.selectionRegistrar}) {
     final defaultBuilders = [
-      HeadlineBuilder(controller: controller),
-      LatexBlockBuilder(),
-      SimpleInlinesBuilder(
-        context: context,
-        emphasis: controller.styleSheet.emphasis,
-        strongEmphasis: controller.styleSheet.strongEmphasis,
-        highlight: controller.styleSheet.highlight,
-        strikethrough: controller.styleSheet.strikethrough,
-        subscript: controller.styleSheet.subscript,
-        superscript: controller.styleSheet.superscript,
-        kbd: controller.styleSheet.kbd,
-      ),
-      ThematicBreakBuilder(
-        color: controller.styleSheet.dividerColor,
-        height: controller.styleSheet.dividerHeight,
-        thickness: controller.styleSheet.dividerThickness,
-      ),
-      ParagraphBuilder(
-        textStyle: controller.styleSheet.paragraph,
-        padding: controller.styleSheet.paragraphPadding,
-      ),
-      CodeSpanBuilder(
-          context: context, textStyle: controller.styleSheet.codeSpan),
-      LinkBuilder(
-          controller: controller, textStyle: controller.styleSheet.link),
-      TableBuilder(
-        table: controller.styleSheet.table,
-        tableHead: controller.styleSheet.tableHead,
-        tableBody: controller.styleSheet.tableBody,
-        tableBorder: controller.styleSheet.tableBorder,
-        tableRowDecoration: controller.styleSheet.tableRowDecoration,
-        tableRowDecorationAlternating:
-            controller.styleSheet.tableRowDecorationAlternating,
-        tableCellPadding: controller.styleSheet.tableCellPadding,
-        tableColumnWidth: controller.styleSheet.tableColumnWidth,
-      ),
-      ImageBuilder(),
-      CodeBlockBuilder(
-        controller: controller,
-        context: context,
-        textStyle: controller.styleSheet.codeBlock,
-        padding: controller.styleSheet.codeblockPadding,
-        decoration: controller.styleSheet.codeblockDecoration,
-      ),
-      BlockquoteBuilder(
-        context: context,
-        textStyle: controller.styleSheet.blockquote,
-        decoration: controller.styleSheet.blockquoteDecoration,
-        padding: controller.styleSheet.blockquotePadding,
-        contentPadding: controller.styleSheet.blockquoteContentPadding,
-      ),
-      ListBuilder(
-        controller: controller,
-        list: controller.styleSheet.list,
-        listItem: controller.styleSheet.listItem,
-        listItemMinIndent: controller.styleSheet.listItemMinIndent,
-        checkbox: controller.styleSheet.checkbox,
-        paragraphPadding: controller.styleSheet.paragraphPadding,
-      ),
-      FootnoteBuilder(
-        footnote: controller.styleSheet.footnote,
-        footnoteReference: controller.styleSheet.footnoteReference,
-        footnoteReferenceDecoration:
-            controller.styleSheet.footnoteReferenceDecoration,
-        footnoteReferencePadding:
-            controller.styleSheet.footnoteReferencePadding,
-      ),
+      HeadlineBuilder(controller),
+      LatexBlockBuilder(controller),
+      SimpleInlinesBuilder(controller),
+      ThematicBreakBuilder(controller: controller),
+      ParagraphBuilder(controller),
+      CodeSpanBuilder(controller),
+      LinkBuilder(controller),
+      TableBuilder(controller),
+      ImageBuilder(controller),
+      CodeBlockBuilder(controller),
+      BlockquoteBuilder(controller),
+      ListBuilder(controller),
+      FootnoteBuilder(controller),
     ];
 
     for (final builder in [...defaultBuilders, ...controller.elementBuilders]) {
@@ -121,13 +50,10 @@ class MarkdownRenderer implements NodeVisitor {
       }
     }
   }
+  final SelectionRegistrar? selectionRegistrar;
+  BuildContext context;
 
-  final TextAlign _textAlign;
-  final SelectionRegistrar? _selectionRegistrar;
-  final TextStyle _defaultTextStyle;
-  final MarkDownController controller;
-  bool get selectable => _selectionRegistrar != null;
-  MouseCursor? get mouseCursor => selectable ? SystemMouseCursors.text : null;
+  final MarkDownConfig controller;
 
   String? _keepLineEndingsWhen;
   final _gestureRecognizers = <String, GestureRecognizer>{};
@@ -172,12 +98,9 @@ class MarkdownRenderer implements NodeVisitor {
       builder.gestureRecognizer(element),
     );
 
-    final defaultTextStyle =
-        _defaultTextStyle.merge(controller.styleSheet.textStyle);
-
     _tree.add(_TreeElement.fromAstElement(
       element,
-      style: builder.buildTextStyle(element, defaultTextStyle),
+      style: builder.buildTextStyle(element, controller.defaultTextStyle),
     ));
     return true;
   }
@@ -256,9 +179,9 @@ class MarkdownRenderer implements NodeVisitor {
     return RichText(
         strutStyle: strutStyle,
         text: text,
-        textAlign: textAlign ?? _textAlign,
+        textAlign: textAlign ?? controller.defaultTextAlign,
         selectionColor: controller.selectionColor,
-        selectionRegistrar: _selectionRegistrar);
+        selectionRegistrar: selectionRegistrar);
   }
 
   /// Merges the [RichText] elements of [widgets] while it is possible.

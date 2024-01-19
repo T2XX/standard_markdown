@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'extension.dart';
 import 'package:standard_markdown/standard_markdown.dart';
-import 'package:standard_markdown/global_coltroller.dart';
 
 const markdown = r'''
 # I'm h1 _sd_
 
-## I'm h2  $dsda$
+## I'm h2 $dsda$
 
 ### I'm h3
 
@@ -55,8 +53,6 @@ _italic text_
    2. BBBB
    3. CCCC
 
-[I&#39;m link](https://github.com/asjqkkkk/flutter-todos)
-
 - [ ] I'm _CheckBox_
 - [X] I'm _CheckBox_ too
 
@@ -79,7 +75,6 @@ Hello **Markdown**!
 
 - [X] ==100%== conform to CommonMark.
 - [X] ==100%== conform to GFM.
-- [X] Easy to implement syntax **highlighting**, for example `flutter_prism`:
 
   ```dart
 
@@ -92,19 +87,14 @@ Hello **Markdown**!
   }
 
   ```
-- [X] Easy to custom, for example:
 
-  > This is a #custom_extension
-  >
+多国语言测试
 
----
+اختبار متعدد اللغات
 
-### Dependencies
+다국어 테스트
 
-| Name              | Required |
-| ----------------- | -------: |
-| `dart_markdown` |      Yes |
-| `flutter_prism` |       No |
+多言語テスト
 
 这是一篇讲解如何正确使用 **Markdown** 的排版示例，学会这个很有必要，能让你的文章有更佳清晰的排版。
 
@@ -148,22 +138,10 @@ Hello **Markdown**!
 
 ![图片描述是什么鬼？](https://s4.51cto.com/images/blog/202112/31120749_61ce82155047c46348.png?x-oss-process=image/watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_30,g_se,x_10,y_10,shadow_20,type_ZmFuZ3poZW5naGVpdGk=)
 
-```undefined
-![alt 文本](http://image-path.png)
-![alt 文本](http://image-path.png "图片 Title 值")
-
-```
 
 代码块
 
 #### 普通
-
-```undefined
-*emphasize*    **strong**
-_emphasize_    __strong__
-var a = 1
-
-```
 
 #### 语法高亮支持
 
@@ -241,11 +219,6 @@ public classHelloWorld{
 | cell 3   | cell 4   |
 | cell 5   | cell 6   |
 
-### 隐藏细节
-
-<details><summary>这里是摘要部分。</summary>
-
-</details>
 
 ### 段落
 
@@ -256,13 +229,6 @@ public classHelloWorld{
 ### 链接引用
 
 [链接文本](https://b3log.org/)
-
-```undefined
-[链接文本][链接标识]
-
-[链接标识]: https://b3log.org
-
-```
 
 ### 数学公式
 
@@ -275,14 +241,20 @@ $$
 行内公式：
 
 公式$Em^2$是行内。
+
+Complex Use
+
+| 随机变量 | $X$               | $E(x)$期望  | $Var(X)$方差  |
+| -------- | ----------------- | ----------- | ------------- |
+| 两点分布 | $B(1,p)$          | $P$         | $p(1-p)$      |
+| 二项分布 | $B(n,p)$          | $nP$        | $np(1-p)$     |
+| 泊松分布 | $P(\lambda)$      | $\lambda$   | $\lambda$     |
+| 均匀分布 | $U[a,b]$          | $(a+b)/2$   | $(b-a)^2/12$  |
+| 指数分布 | $EP(\lambda)$     | $1/\lambda$ | $1/\lambda^2$ |
+| 正太分布 | $N(\mu,\sigma^2)$ | $\mu$       | $\sigma^2$    |
+
 ''';
-var latex = r'''$$
-123123\pm
-$$
 
-行内公式：
-
-公式$Em^2$是行内。''';
 void main() {
   runApp(const MyApp());
 }
@@ -293,7 +265,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        theme: ThemeData.light(useMaterial3: true),
+        theme: ThemeData.light(),
         darkTheme: ThemeData.dark(),
         title: 'MarkdownViewer Demo',
         debugShowCheckedModeBanner: false,
@@ -301,19 +273,23 @@ class MyApp extends StatelessWidget {
   }
 }
 
+TextEditingController editingController = TextEditingController(text: markdown);
+
 class MyHomePage extends StatelessWidget {
   const MyHomePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final MarkDownController controller = Get.put(MarkDownController());
-    controller.loadFromSring(markdown, false);
-    controller.markdownSyntaxList.add(ExampleSyntax());
-    controller.elementBuilders.add(ExampleBuilder());
     return Scaffold(
         appBar: AppBar(title: const Text('MarkdownViewer Demo')),
-        body: ListView(
-            padding: const EdgeInsets.all(20),
-            children: [StandardMarkdown(controller: controller)]));
+        body: StandardMarkdown(
+            oninit: (config) {
+              editingController.selection =
+                  TextSelection.fromPosition(TextPosition(offset: 0));
+            },
+            mode: 0,
+            toolbar: true,
+            selectable: true,
+            data: editingController));
   }
 }

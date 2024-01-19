@@ -6,12 +6,24 @@ class LatexInlineSyntax extends InlineSyntax {
   @override
   InlineObject? parse(InlineParser parser, Match match) {
     final marker = parser.consumeBy(match[0]!.length);
-    final content = marker.first.text;
+    String content = "";
+    if (marker.length > 1) {
+      /* rebuiltcontent */
+      for (int i = 0; i < marker.length; i++) {
+        content += marker[i].text;
+        if (i < marker.length - 1) {
+          content += r"\";
+        }
+      }
+    } else {
+      content = marker.first.text;
+    }
+
     return InlineElement('LatexInline',
         children: marker.map(Text.fromSpan).toList(),
         end: marker.first.end,
         start: marker.first.start,
-        attributes: {'latexContent': content.substring(1, content.length - 1)});
+        attributes: {'latexContent': content});
   }
 }
 
@@ -21,11 +33,20 @@ class LatexBlockSyntax extends InlineSyntax {
   @override
   InlineObject? parse(InlineParser parser, Match match) {
     final marker = parser.consumeBy(match[0]!.length);
-    final content = marker.first.text;
+    String content = "";
+    if (marker.length > 1) {
+      /* rebuiltcontent */
+      for (int i = 0; i < marker.length; i++) {
+        content += marker[i].text;
+      }
+    } else {
+      content = marker.first.text;
+    }
+
     return InlineElement('LatexBlock',
         children: marker.map(Text.fromSpan).toList(),
         end: marker.first.end,
         start: marker.first.start,
-        attributes: {'latexContent': content.substring(2, content.length - 2)});
+        attributes: {'latexContent': content});
   }
 }

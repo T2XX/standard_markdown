@@ -3,26 +3,12 @@ import 'package:flutter_prism/flutter_prism.dart';
 import 'package:get/get.dart';
 
 import '../../global_coltroller.dart';
-import '../definition.dart';
 import 'builder.dart';
 
 class CodeBlockBuilder extends MarkdownElementBuilder {
-  CodeBlockBuilder({
-    TextStyle? textStyle,
-    super.context,
-    this.padding,
-    this.decoration,
-    required this.controller,
-  }) : super(
-            textStyle: TextStyle(
-          color: Get.isDarkMode
-              ? const Color(0xffcccccc)
-              : const Color(0xff333333),
-        ).merge(textStyle));
+  CodeBlockBuilder(this.controller);
 
-  final EdgeInsets? padding;
-  final BoxDecoration? decoration;
-  final MarkDownController controller;
+  final MarkDownConfig controller;
 
   @override
   final matchTypes = ['codeBlock'];
@@ -41,15 +27,13 @@ class CodeBlockBuilder extends MarkdownElementBuilder {
     late List<TextSpan> spans;
     try {
       final prism = Prism(
-        mouseCursor: SystemMouseCursors.text,
-        style: Get.isDarkMode ? const PrismStyle.dark() : const PrismStyle(),
-      );
-      spans = prism.render(text, parent.attributes['language']!);
+          mouseCursor: SystemMouseCursors.text,
+          style: Get.isDarkMode ? const PrismStyle.dark() : const PrismStyle());
+      spans = prism.render(text, parent.attributes['language'] ?? "");
     } catch (e) {
       final prism = Prism(
-        mouseCursor: SystemMouseCursors.text,
-        style: Get.isDarkMode ? const PrismStyle.dark() : const PrismStyle(),
-      );
+          mouseCursor: SystemMouseCursors.text,
+          style: Get.isDarkMode ? const PrismStyle.dark() : const PrismStyle());
       spans = prism.render(text, 'plain');
     }
 
@@ -58,23 +42,11 @@ class CodeBlockBuilder extends MarkdownElementBuilder {
     }
 
     return TextSpan(
-        children: spans, style: style, mouseCursor: renderer.mouseCursor);
+        children: spans, style: style, mouseCursor: MouseCursor.defer);
   }
 
   @override
   Widget buildWidget(element, parent) {
-    Color backgroundColor;
-    if (Get.isDarkMode) {
-      backgroundColor = const Color(0xff101010);
-    } else {
-      backgroundColor = const Color(0xfff0f0f0);
-    }
-
-    final defaultDecoration = BoxDecoration(
-      color: backgroundColor,
-      borderRadius: BorderRadius.circular(5),
-    );
-
     Widget child;
     if (element.children.isNotEmpty) {
       final textWidget = element.children.single;
@@ -92,9 +64,8 @@ class CodeBlockBuilder extends MarkdownElementBuilder {
     }
 
     return Container(
-      width: double.infinity,
-      decoration: decoration ?? defaultDecoration,
-      child: child,
-    );
+        width: double.infinity,
+        decoration: controller.codeBlockDecoration,
+        child: child);
   }
 }

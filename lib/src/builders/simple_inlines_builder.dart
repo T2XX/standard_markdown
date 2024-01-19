@@ -1,43 +1,19 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-
+import '../../global_coltroller.dart';
 import 'builder.dart';
 
 class SimpleInlinesBuilder extends MarkdownElementBuilder {
-  SimpleInlinesBuilder({
-    super.context,
-    TextStyle? emphasis,
-    TextStyle? strongEmphasis,
-    TextStyle? highlight,
-    TextStyle? strikethrough,
-    TextStyle? subscript,
-    TextStyle? superscript,
-    TextStyle? kbd,
-  }) : super(textStyleMap: {
-          'emphasis': const TextStyle(
-            fontStyle: FontStyle.italic,
-          ).merge(emphasis),
-          'strongEmphasis': const TextStyle(
-            fontWeight: FontWeight.w700,
-          ).merge(strongEmphasis),
-          'highlight': TextStyle(
-            backgroundColor: Get.isDarkMode
-                ? const Color(0xffffbb00)
-                : const Color(0xffffee00),
-          ).merge(highlight),
-          'strikethrough': const TextStyle(
-            color: Color(0xffff6666),
-            decoration: TextDecoration.lineThrough,
-          ).merge(strikethrough),
-          'subscript': const TextStyle(
-            fontFeatures: [FontFeature.subscripts()],
-          ).merge(subscript),
-          'superscript': const TextStyle(
-            fontFeatures: [FontFeature.superscripts()],
-          ).merge(superscript),
-          'kbd': kbd,
+  SimpleInlinesBuilder(this.controller)
+      : super(textStyleMap: {
+          'emphasis': controller.emphasisTextStyle,
+          'strongEmphasis': controller.strongEmphasisTextStyle,
+          'highlight': controller.highlightTextStyle,
+          'strikethrough': controller.strikethroughTextStyle,
+          'subscript': controller.subscriptTextStyle,
+          'superscript': controller.superscriptTextStyle,
+          'kbd': controller.kbdTextStyle
         });
+  MarkDownConfig controller;
 
   @override
   TextSpan? createText(element, parentStyle) {
@@ -60,6 +36,6 @@ class SimpleInlinesBuilder extends MarkdownElementBuilder {
     'superscript',
     'subscript',
     'kbd',
-    'rawHtml',
+    'rawHtml'
   ];
 }

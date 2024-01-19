@@ -14,7 +14,8 @@ dependencies:
   # markdown_prettier: ^0.1.0-alpha
   flutter_math_fork: ^0.7.2
   markdown_prettier: ^0.1.0-alpha
-
+  markdown_toolbar: ^0.5.0
+  super_clipboard: any
 dev_dependencies:
   lints: ^2.0.0
   test: ^1.21.0

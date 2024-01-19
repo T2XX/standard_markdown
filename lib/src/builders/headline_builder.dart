@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 import '../../global_coltroller.dart';
 import '../../standard_markdown.dart';
 import '../helpers/inline_wraper.dart';
+import '../models/markdown_tree_element.dart';
 
 class HeadlineBuilder extends MarkdownElementBuilder {
-  HeadlineBuilder({required this.controller});
-  final MarkDownController controller;
+  HeadlineBuilder(this.controller);
+  final MarkDownConfig controller;
 
   @override
   TextStyle? buildTextStyle(element, defaultStyle) {

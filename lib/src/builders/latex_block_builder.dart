@@ -1,49 +1,54 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_math_fork/flutter_math.dart';
+
+import '../../global_coltroller.dart';
 import '../../standard_markdown.dart';
 
 class LatexBlockBuilder extends MarkdownElementBuilder {
+  LatexBlockBuilder(this.controller);
+
+  MarkDownConfig controller;
+
   @override
   final matchTypes = ['LatexInline', 'LatexBlock'];
 
   @override
   Widget? buildWidget(element, parent) {
-    final String textContent = element.attributes['latexContent']!;
+    final String text = element.attributes['latexContent'] ?? "";
+    final ScrollController latexScroll = ScrollController();
 
     if (element.type == 'LatexInline') {
-      final level = parent.element.attributes['level'];
       return RichText(
           text: WidgetSpan(
               child: Container(
                   padding: EdgeInsets.only(
-                      top: level == '1'
-                          ? 16
-                          : level == '2'
-                              ? 14
-                              : level == '3'
-                                  ? 12
-                                  : level == '4'
-                                      ? 10
-                                      : level == '5'
-                                          ? 8
-                                          : 6),
-                  child: Math.tex(textContent, textStyle: parentStyle,
-                      onErrorFallback: (error) {
-                    return Text(textContent);
-                  }))));
+                      top: controller
+                          .getLatexPadding(parent.element.attributes['level'])),
+                  child: Scrollbar(
+                      controller: latexScroll,
+                      child: SingleChildScrollView(
+                          controller: latexScroll,
+                          scrollDirection: Axis.horizontal,
+                          child: Math.tex(text.replaceAll(r"$", ""),
+                              textStyle: parentStyle, onErrorFallback: (error) {
+                            return Text(text,
+                                style: TextStyle(color: Colors.red));
+                          }))))));
     } else if (element.type == 'LatexBlock') {
       return RichText(
           text: WidgetSpan(
-              child: SizedBox(
-                  width: double.infinity,
-                  height: 18,
-                  child: Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Math.tex(textContent, textStyle: parentStyle,
-                          onErrorFallback: (error) {
-                        return Text(textContent,
-                            style: TextStyle(color: Colors.red));
-                      })))));
+              child: Align(
+                  alignment: Alignment.center,
+                  child: Scrollbar(
+                      controller: latexScroll,
+                      child: SingleChildScrollView(
+                          controller: latexScroll,
+                          scrollDirection: Axis.horizontal,
+                          child: Math.tex(text.replaceAll(r"$", ""),
+                              textStyle: parentStyle, onErrorFallback: (error) {
+                            return Text("$text\n${error.message}",
+                                style: TextStyle(color: Colors.red));
+                          }))))));
     } else {
       return null;
     }

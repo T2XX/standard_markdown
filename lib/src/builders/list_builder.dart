@@ -3,28 +3,17 @@ import 'package:get/get.dart';
 
 import '../../global_coltroller.dart';
 import '../ast.dart';
-import '../definition.dart';
 import 'builder.dart';
-import 'link_builder.dart';
 
 /// A builder to create list.
 class ListBuilder extends MarkdownElementBuilder {
-  ListBuilder({
-    TextStyle? list,
-    TextStyle? listItem,
-    required this.listItemMinIndent,
-    this.checkbox,
-    this.paragraphPadding,
-    required this.controller,
-  }) : super(textStyleMap: {
-          'orderedList': list,
-          'bulletList': list,
-          'listItem': listItem,
+  ListBuilder(this.controller)
+      : super(textStyleMap: {
+          'orderedList': controller.orderedListTextStyle,
+          'bulletList': controller.bulletListTextStyle,
+          'listItem': controller.listItemTextStyle
         });
-  final MarkDownController controller;
-  final ButtonStyle? checkbox;
-  final double? listItemMinIndent;
-  final EdgeInsets? paragraphPadding;
+  final MarkDownConfig controller;
 
   @override
   final matchTypes = ['orderedList', 'bulletList', 'listItem'];
@@ -63,40 +52,27 @@ class ListBuilder extends MarkdownElementBuilder {
 
     final markerContainerHeight = _getLineHeight(element.style);
 
-    final listItem = Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        ConstrainedBox(
+    final listItem =
+        Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      ConstrainedBox(
           constraints: BoxConstraints(
-            minHeight: markerContainerHeight ?? 0.0,
-            maxHeight: markerContainerHeight ?? double.infinity,
-            minWidth: listItemMinIndent ?? 30.0,
-          ),
+              minHeight: markerContainerHeight ?? 0.0,
+              maxHeight: markerContainerHeight ?? double.infinity,
+              minWidth: controller.listItemMinIndent),
           child: Align(
             child: Padding(
-              padding: EdgeInsets.only(
-                right: controller.listItemMarkerTrailingSpace,
-              ),
-              child: itemMarker,
-            ),
-          ),
-        ),
-        if (child != null) Expanded(child: child),
-      ],
-    );
+                padding: EdgeInsets.only(
+                    right: controller.listItemMarkerTrailingSpace),
+                child: itemMarker),
+          )),
+      if (child != null) Expanded(child: child)
+    ]);
 
-    final hasParagraphPadding =
-        paragraphPadding != null && paragraphPadding != EdgeInsets.zero;
-
-    if (_listStrack.last.attributes['isTight'] == 'true' ||
-        !hasParagraphPadding) {
+    if (_listStrack.last.attributes['isTight'] == 'true') {
       return listItem;
     }
 
-    return Padding(
-      padding: paragraphPadding!,
-      child: listItem,
-    );
+    return Padding(padding: controller.paragraphPadding, child: listItem);
   }
 
   Widget _buildListItemMarker(

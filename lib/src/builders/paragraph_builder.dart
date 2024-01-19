@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 
+import '../../global_coltroller.dart';
 import '../helpers/parse_block_padding.dart';
 import 'builder.dart';
 
 class ParagraphBuilder extends MarkdownElementBuilder {
-  ParagraphBuilder({
-    super.textStyle,
-    this.padding,
-  });
-
-  final EdgeInsets? padding;
+  ParagraphBuilder(this.controller);
+  MarkDownConfig controller;
 
   @override
   final matchTypes = ['paragraph'];
@@ -21,6 +18,7 @@ class ParagraphBuilder extends MarkdownElementBuilder {
       return null;
     }
 
-    return parseBlockPadding(padding, element.element.position);
+    return parseBlockPadding(
+        controller.paragraphPadding, element.element.position);
   }
 }

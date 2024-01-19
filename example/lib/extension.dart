@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:standard_markdown/global_coltroller.dart';
 import 'package:standard_markdown/standard_markdown.dart';
 
 /// An example of creating a syntax extension.

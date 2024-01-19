@@ -1,1 +1,3 @@
-void main() {}
+void main() {
+  print(" #  s  s ".trim());
+}

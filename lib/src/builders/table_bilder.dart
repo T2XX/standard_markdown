@@ -1,44 +1,12 @@
 import 'package:flutter/material.dart';
 
-import '../definition.dart';
+import '../../global_coltroller.dart';
 import 'builder.dart';
 
-const _tableBorderSide = BorderSide(color: Color(0xffcccccc));
-
-const _tableBorder = TableBorder(
-  top: _tableBorderSide,
-  left: _tableBorderSide,
-  right: _tableBorderSide,
-  bottom: _tableBorderSide,
-  horizontalInside: _tableBorderSide,
-  verticalInside: _tableBorderSide,
-);
-
-const _tableCellPadding = EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0);
-
 class TableBuilder extends MarkdownElementBuilder {
-  TableBuilder({
-    TextStyle? table,
-    TextStyle? tableHead,
-    TextStyle? tableBody,
-    this.tableBorder,
-    this.tableRowDecoration,
-    this.tableRowDecorationAlternating,
-    this.tableCellPadding,
-    this.tableColumnWidth,
-  }) : super(textStyleMap: {
-          'table': table,
-          'tableHead': const TextStyle(
-            fontWeight: FontWeight.w600,
-          ).merge(tableHead),
-          'tableBody': tableBody,
-        });
+  TableBuilder(this.controller);
 
-  final EdgeInsets? tableCellPadding;
-  final TableBorder? tableBorder;
-  final TableColumnWidth? tableColumnWidth;
-  final BoxDecoration? tableRowDecoration;
-  final MarkdownAlternating? tableRowDecorationAlternating;
+  MarkDownConfig controller;
 
   final _tableStack = <_TableElement>[];
 
@@ -49,7 +17,7 @@ class TableBuilder extends MarkdownElementBuilder {
     'tableRow',
     'tableBody',
     'tableHeadCell',
-    'tableBodyCell',
+    'tableBodyCell'
   ];
 
   @override
@@ -61,8 +29,8 @@ class TableBuilder extends MarkdownElementBuilder {
     if (type == 'table') {
       _tableStack.add(_TableElement());
     } else if (type == 'tableRow') {
-      var decoration = tableRowDecoration;
-      final alternating = tableRowDecorationAlternating;
+      var decoration = controller.tableRowDecoration;
+      final alternating = controller.tableRowDecorationAlternating;
       if (alternating != null) {
         final length = _tableStack.single.rows.length;
         if (alternating == MarkdownAlternating.odd) {
@@ -95,32 +63,29 @@ class TableBuilder extends MarkdownElementBuilder {
     final type = element.type;
 
     if (type == 'table') {
+      final ScrollController tableScroll = ScrollController();
+
       return Scrollbar(
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Table(
-            defaultColumnWidth:
-                tableColumnWidth ?? const IntrinsicColumnWidth(),
-            defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-            border: tableBorder ?? _tableBorder,
-            children: _tableStack.removeLast().rows,
-          ),
-        ),
-      );
+          controller: tableScroll,
+          child: SingleChildScrollView(
+              controller: tableScroll,
+              scrollDirection: Axis.horizontal,
+              child: Table(
+                  defaultColumnWidth: controller.tableColumnWidth,
+                  defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+                  border: controller.tableBorder,
+                  children: _tableStack.removeLast().rows)));
     } else if (type == 'tableHeadCell' || type == 'tableBodyCell') {
       final children = element.children;
 
-      _tableStack.single.rows.last.children.add(
-        TableCell(
-          verticalAlignment: TableCellVerticalAlignment.top,
-          child: Padding(
-            padding: tableCellPadding ?? _tableCellPadding,
-            child: children.isEmpty ? const SizedBox.shrink() : children.single,
-          ),
-        ),
-      );
+      _tableStack.single.rows.last.children.add(TableCell(
+        verticalAlignment: TableCellVerticalAlignment.top,
+        child: Padding(
+            padding: controller.tableCellPadding,
+            child:
+                children.isEmpty ? const SizedBox.shrink() : children.single),
+      ));
     }
-
     return null;
   }
 }

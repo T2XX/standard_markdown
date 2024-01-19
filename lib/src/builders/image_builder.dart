@@ -2,10 +2,12 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 // import '../models/markdown_tree_element.dart';
+import '../../global_coltroller.dart';
 import 'builder.dart';
 
 class ImageBuilder extends MarkdownElementBuilder {
-  ImageBuilder();
+  ImageBuilder(this.controller);
+  MarkDownConfig controller;
 
   @override
   bool isBlock(element) => true;

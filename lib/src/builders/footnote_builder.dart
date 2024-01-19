@@ -1,49 +1,32 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 
+import '../../global_coltroller.dart';
 import 'builder.dart';
 
 class FootnoteBuilder extends MarkdownElementBuilder {
-  FootnoteBuilder({
-    TextStyle? footnote,
-    TextStyle? footnoteReference,
-    this.footnoteReferenceDecoration,
-    this.footnoteReferencePadding,
-  })  : _footnoteStyle = footnote,
-        super(textStyleMap: {
-          'footnoteReference': footnoteReference,
-        });
-
-  final TextStyle? _footnoteStyle;
-  BoxDecoration? footnoteReferenceDecoration;
-  EdgeInsets? footnoteReferencePadding;
+  FootnoteBuilder(this.controller)
+      : super(
+            textStyleMap: {'footnoteReference': controller.footnoteReference});
+  MarkDownConfig controller;
 
   @override
-  final matchTypes = [
-    'footnote',
-    'footnoteReference',
-  ];
+  final matchTypes = ['footnote', 'footnoteReference'];
 
   @override
   Widget? buildWidget(element, parent) {
     if (element.type == 'footnote') {
-      return Text(
-        element.attributes['number']!,
-        style: const TextStyle(
-          fontFeatures: [FontFeature.superscripts()],
-        ).merge(_footnoteStyle),
-      );
+      return Text(element.attributes['number']!,
+          style: controller.footNoteStyle);
     }
     final child = element.children.single;
-    if (footnoteReferenceDecoration == null &&
-        footnoteReferencePadding == null) {
+    if (controller.footnoteReferenceDecoration == null &&
+        controller.footnoteReferencePadding == null) {
       return child;
     }
 
     return Container(
-      decoration: footnoteReferenceDecoration,
-      padding: footnoteReferencePadding,
-      child: child,
-    );
+        decoration: controller.footnoteReferenceDecoration,
+        padding: controller.footnoteReferencePadding,
+        child: child);
   }
 }

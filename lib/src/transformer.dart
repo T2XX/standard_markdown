@@ -1,5 +1,5 @@
+import '../global_coltroller.dart';
 import 'ast.dart';
-import 'definition.dart';
 
 /// Transform the Markdown AST to the AST fits for Flutter usage.
 class AstTransformer {

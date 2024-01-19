@@ -1,40 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import '../../global_coltroller.dart';
 import 'builder.dart';
 
 class CodeSpanBuilder extends MarkdownElementBuilder {
-  CodeSpanBuilder({
-    super.context,
-    TextStyle? textStyle,
-  }) : _textStyle = textStyle;
+  CodeSpanBuilder(this.controller);
+  MarkDownConfig controller;
 
   @override
   final matchTypes = ['codeSpan'];
 
-  double? _lineHeight;
-  final TextStyle? _textStyle;
-
   @override
-  TextStyle? buildTextStyle(element, defaultStyle) {
-    Color color;
-    Color backgroundColor;
-    if (Get.isDarkMode) {
-      color = const Color(0Xffca4219);
-      backgroundColor = const Color(0Xff424242);
-    } else {
-      color = const Color(0xff8b1c1c);
-      backgroundColor = const Color(0x10000000);
-    }
-
-    final style = super.buildTextStyle(element, defaultStyle)?.merge(TextStyle(
-          color: color,
-          fontFamily: 'monospace',
-          backgroundColor: backgroundColor,
-        ).merge(_textStyle));
-    _lineHeight = style?.height;
-
-    return style?.copyWith(height: 1);
-  }
+  TextStyle? buildTextStyle(element, defaultStyle) => super
+      .buildTextStyle(element, defaultStyle)
+      ?.merge(controller.codeSpanTextStyle);
 
   @override
   Widget? buildWidget(element, parent) {
@@ -42,9 +20,8 @@ class CodeSpanBuilder extends MarkdownElementBuilder {
 
     // The purpose of this is to make the RichText has the same line height as
     // it should be while the line height of TextSpan has been changed to 1.
-    return renderer.createRichText(
-      richText.text as TextSpan,
-      strutStyle: StrutStyle(height: _lineHeight, forceStrutHeight: true),
-    );
+    return renderer.createRichText(richText.text as TextSpan,
+        strutStyle: StrutStyle(
+            height: controller.codeSpanHeight, forceStrutHeight: true));
   }
 }
