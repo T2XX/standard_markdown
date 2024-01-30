@@ -109,12 +109,26 @@ class _StandardmarkdownState extends State<StandardMarkdown> {
     return Focus(
         onKey: (node, event) {
           if (event is RawKeyDownEvent && event.logicalKey.keyLabel == 'Tab') {
-            /* tab插入四个空格*/
-            final int origin = data.selection.baseOffset + 4;
-            data.text =
-                "${data.text.substring(0, data.selection.baseOffset)}    ${data.text.substring(data.selection.baseOffset)}";
-            data.selection =
-                TextSelection.fromPosition(TextPosition(offset: origin));
+            final int selectStart = data.selection.start;
+            final int selectEnd = data.selection.end;
+            final String destination =
+                data.text.substring(selectStart, selectEnd);
+            var center = "";
+            final List lines = destination.split("\n");
+            for (int i = 0; i < lines.length; i++) {
+              if (i < lines.length - 1) {
+                center += "${controller.replaceTabsWith}${lines[i]}\n";
+              } else {
+                center += "${controller.replaceTabsWith}${lines[i]}";
+              }
+            }
+            data.text = data.text.substring(0, selectStart) +
+                center +
+                data.text.substring(selectEnd);
+            data.selection = TextSelection(
+                baseOffset: selectStart,
+                extentOffset: lines.length * controller.replaceTabsWith.length +
+                    selectEnd);
             return KeyEventResult.handled;
           } else {
             return KeyEventResult.ignored;

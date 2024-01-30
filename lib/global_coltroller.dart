@@ -11,6 +11,7 @@ class MarkDownConfig extends GetxController {
   TextDirection textdirection = TextDirection.ltr;
   String svEditHint = "start from here";
   TextAlign defaultTextAlign = TextAlign.center;
+  String replaceTabsWith = "    ";
   TextStyle defaultTextStyle = TextStyle(
       fontSize: 16,
       height: 1.5,
@@ -171,9 +172,9 @@ class MarkDownConfig extends GetxController {
           focusNode.requestFocus();
         } else {
           data.text =
-              "${data.text.substring(0, selectStart)}~~${data.text.substring(selectStart, selectEnd)}~~${data.text.substring(selectEnd, data.text.length)}";
+              "${data.text.substring(0, selectStart)}~~${data.text.substring(selectStart, selectEnd).replaceFirst("\n", " ")}~~${data.text.substring(selectEnd, data.text.length)}";
           data.selection = TextSelection(
-              baseOffset: selectStart, extentOffset: selectEnd + 4);
+              baseOffset: selectStart + 2, extentOffset: selectEnd + 2);
           focusNode.requestFocus();
         }
         break;
@@ -190,7 +191,7 @@ class MarkDownConfig extends GetxController {
           focusNode.requestFocus();
         } else {
           data.text =
-              "${data.text.substring(0, selectStart)}_${data.text.substring(selectStart, selectEnd)}_${data.text.substring(selectEnd, data.text.length)}";
+              "${data.text.substring(0, selectStart)}_${data.text.substring(selectStart, selectEnd).replaceFirst("\n", " ")}_${data.text.substring(selectEnd, data.text.length)}";
           data.selection = TextSelection(
               baseOffset: selectStart, extentOffset: selectEnd + 2);
           focusNode.requestFocus();
@@ -198,7 +199,7 @@ class MarkDownConfig extends GetxController {
         break;
       case "Link":
         data.text =
-            "${data.text.substring(0, selectStart)}[](${data.text.substring(selectStart, selectEnd)})${data.text.substring(selectEnd, data.text.length)}";
+            "${data.text.substring(0, selectStart)}[](${data.text.substring(selectStart, selectEnd).trimRight()})${data.text.substring(selectEnd, data.text.length)}";
         data.selection =
             TextSelection.fromPosition(TextPosition(offset: selectStart + 1));
         focusNode.requestFocus();
@@ -252,7 +253,7 @@ class MarkDownConfig extends GetxController {
         break;
       case "Photo":
         data.text =
-            "${data.text.substring(0, selectStart)}![](${data.text.substring(selectStart, selectEnd)})${data.text.substring(selectEnd, data.text.length)}";
+            "${data.text.substring(0, selectStart)}![](${data.text.substring(selectStart, selectEnd).trimRight()})${data.text.substring(selectEnd, data.text.length)}";
         data.selection =
             TextSelection.fromPosition(TextPosition(offset: selectStart + 2));
         focusNode.requestFocus();
@@ -271,9 +272,9 @@ class MarkDownConfig extends GetxController {
           focusNode.requestFocus();
         } else {
           data.text =
-              "${data.text.substring(0, selectStart)}```${data.text.substring(selectStart, selectEnd)}```${data.text.substring(selectEnd, data.text.length)}";
+              "${data.text.substring(0, selectStart)}```\n${data.text.substring(selectStart, selectEnd)}\n```${data.text.substring(selectEnd, data.text.length)}";
           data.selection = TextSelection(
-              baseOffset: selectStart, extentOffset: selectEnd + 6);
+              baseOffset: selectStart + 4, extentOffset: selectEnd + 4);
           focusNode.requestFocus();
         }
         break;
@@ -307,23 +308,65 @@ class MarkDownConfig extends GetxController {
               baseOffset: selectStart + 3, extentOffset: selectEnd + 3);
           focusNode.requestFocus();
         } else {
-          match.last;
           data.text =
-              "${data.text.substring(0, selectStart)}- ${data.text.substring(selectStart, data.text.length)}";
+              "${data.text.substring(0, selectEnd)}\n${int.parse(destination.substring(match.last.start).trimLeft()[0]) + 1}. ${data.text.substring(selectEnd, data.text.length)}";
+          data.selection =
+              TextSelection.fromPosition(TextPosition(offset: selectEnd + 4));
+          focusNode.requestFocus();
+        }
+        break;
+      case "Divider":
+        data.text =
+            "${data.text.substring(0, selectStart)}---${data.text.substring(selectEnd, data.text.length)}";
+        data.selection =
+            TextSelection.fromPosition(TextPosition(offset: selectStart + 3));
+        focusNode.requestFocus();
+        break;
+      case "Quote":
+        final String destination = data.text.substring(selectStart, selectEnd);
+        final Iterable<RegExpMatch> match =
+            RegExp("^>.*").allMatches(destination);
+        if (match.isEmpty) {
+          data.text =
+              "${data.text.substring(0, selectStart)}> ${data.text.substring(selectStart, data.text.length)}";
           data.selection = TextSelection(
               baseOffset: selectStart + 2, extentOffset: selectEnd + 2);
+          focusNode.requestFocus();
+        } else {
+          data.text =
+              "${data.text.substring(0, selectStart)}${data.text.substring(selectStart + 2, data.text.length)}";
+          data.selection = TextSelection(
+              baseOffset: selectStart, extentOffset: selectEnd - 2);
           focusNode.requestFocus();
         }
         break;
       default:
+        data.selection =
+            TextSelection(baseOffset: selectStart, extentOffset: selectEnd - 2);
+        focusNode.requestFocus();
     }
   }
 
-  String toolbarH1Tooltip = "H1";
-  String toolbarBoldTooltip = "Bold";
-  String toolbarItalicTooltip = "Italic";
-  String toolbarDelTooltip = "Del";
-  String toolbarLinkTooltip = "Link";
+  String toolbarH1Tip = "H1";
+  String toolbarH2Tip = "H2";
+  String toolbarH3Tip = "H3";
+  String toolbarH4Tip = "H4";
+  String toolbarH5Tip = "H5";
+  String toolbarH6Tip = "H6";
+
+  String toolbarBoldTip = "Bold";
+  String toolbarItalicTip = "Italic";
+  String toolbarDelTip = "Del";
+  String toolbarLinkTip = "Link";
+  String toolbarUnCheckBoxTip = "UnCheckBox";
+  String toolbarCheckBoxTip = "CheckBox";
+
+  String toolbarPhotoTip = "Photo";
+  String toolbarCodeBlockTip = "CodeBlock";
+  String toolbarNumbertListTip = "NumbertList";
+  String toolbarBulletListTip = "BulletList";
+  String toolbarQuoteTip = "Quote";
+  String toolbarDividerTip = "Divider";
 
   Decoration toolbarDecoration = BoxDecoration(
       color: Get.theme.colorScheme.primaryContainer.withOpacity(0.6),

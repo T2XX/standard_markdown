@@ -22,111 +22,131 @@ class _MarkdownToolbarState extends State<MarkdownToolbar> {
     return Container(
         decoration: controller.toolbarDecoration,
         child: Column(children: [
-          Row(
+          Wrap(
             children: [
               IconButton(
+                  tooltip: controller.toolbarH1Tip,
                   onPressed: () => controller.toolbarFormat(
                       widget.data, "H1", widget.focusNode),
                   icon: Text("H1")),
               IconButton(
+                  tooltip: controller.toolbarH2Tip,
                   onPressed: () => controller.toolbarFormat(
                       widget.data, "H2", widget.focusNode),
                   icon: Text("H2")),
               IconButton(
+                  tooltip: controller.toolbarH3Tip,
                   onPressed: () => controller.toolbarFormat(
                       widget.data, "H3", widget.focusNode),
                   icon: Text("H3")),
               IconButton(
+                  tooltip: controller.toolbarH4Tip,
                   onPressed: () => controller.toolbarFormat(
                       widget.data, "H4", widget.focusNode),
                   icon: Text("H4")),
               IconButton(
+                  tooltip: controller.toolbarH5Tip,
                   onPressed: () => controller.toolbarFormat(
                       widget.data, "H5", widget.focusNode),
                   icon: Text("H5")),
               IconButton(
+                  tooltip: controller.toolbarH6Tip,
                   onPressed: () => controller.toolbarFormat(
                       widget.data, "H6", widget.focusNode),
                   icon: Text("H6"))
             ],
           ),
-          Row(children: [
+          Wrap(children: [
             IconButton(
-                tooltip: controller.toolbarBoldTooltip,
+                tooltip: controller.toolbarBoldTip,
                 onPressed: () => controller.toolbarFormat(
                     widget.data, "Bold", widget.focusNode),
                 icon: Text("B",
                     style:
                         TextStyle(fontWeight: FontWeight.bold, fontSize: 18))),
             IconButton(
-                tooltip: controller.toolbarItalicTooltip,
+                tooltip: controller.toolbarItalicTip,
                 onPressed: () => controller.toolbarFormat(
                     widget.data, "Italic", widget.focusNode),
                 icon: Text("I",
                     style:
                         TextStyle(fontStyle: FontStyle.italic, fontSize: 18))),
             IconButton(
-                tooltip: controller.toolbarDelTooltip,
+                tooltip: controller.toolbarDelTip,
                 onPressed: () => controller.toolbarFormat(
                     widget.data, "Del", widget.focusNode),
                 icon: Text("T",
                     style: TextStyle(decoration: TextDecoration.lineThrough))),
             IconButton(
-                tooltip: controller.toolbarLinkTooltip,
+                tooltip: controller.toolbarLinkTip,
                 onPressed: () => controller.toolbarFormat(
                     widget.data, "Link", widget.focusNode),
                 icon: Icon(Icons.link)),
             IconButton(
+                tooltip: controller.toolbarUnCheckBoxTip,
                 onPressed: () => controller.toolbarFormat(
                     widget.data, "Check", widget.focusNode),
                 icon: Icon(Icons.check_box_outline_blank)),
             IconButton(
+                tooltip: controller.toolbarCheckBoxTip,
                 onPressed: () => controller.toolbarFormat(
                     widget.data, "Uncheck", widget.focusNode),
                 icon: Icon(Icons.check_box)),
           ]),
-          Row(children: [
+          Wrap(children: [
             IconButton(
+                tooltip: controller.toolbarPhotoTip,
                 onPressed: () => controller.toolbarFormat(
                     widget.data, "Photo", widget.focusNode),
                 icon: Icon(Icons.photo)),
             IconButton(
+                tooltip: controller.toolbarCodeBlockTip,
                 onPressed: () => controller.toolbarFormat(
                     widget.data, "Code", widget.focusNode),
                 icon: Icon(Icons.code)),
             IconButton(
+                tooltip: controller.toolbarBulletListTip,
                 onPressed: () => controller.toolbarFormat(
                     widget.data, "BulletList", widget.focusNode),
                 icon: Icon(Icons.format_list_bulleted)),
             IconButton(
+                tooltip: controller.toolbarNumbertListTip,
                 onPressed: () => controller.toolbarFormat(
                     widget.data, "NumbertList", widget.focusNode),
                 icon: Icon(Icons.format_list_numbered)),
-            IconButton(onPressed: () {}, icon: Icon(Icons.format_quote)),
-            IconButton(onPressed: () {}, icon: Icon(Icons.horizontal_rule)),
+            IconButton(
+                tooltip: controller.toolbarQuoteTip,
+                onPressed: () => controller.toolbarFormat(
+                    widget.data, "Quote", widget.focusNode),
+                icon: Icon(Icons.format_quote)),
+            IconButton(
+                tooltip: controller.toolbarDividerTip,
+                onPressed: () => controller.toolbarFormat(
+                    widget.data, "Divider", widget.focusNode),
+                icon: Icon(Icons.horizontal_rule)),
           ]),
-          Row(
+          Wrap(
             children: [
               IconButton(
-                  onPressed: () => setState(() {
-                        if (textIndex > 0) {
-                          textIndex--;
-                          widget.data.text = textStates[textIndex];
-                        }
-                      }),
+                  onPressed: () {
+                    if (textIndex > 0) {
+                      textIndex--;
+                      widget.data.text = textStates[textIndex];
+                    }
+                  },
                   icon: Icon(Icons.undo)),
               IconButton(
-                  onPressed: () => setState(() {
-                        if (textIndex < textStates.length - 1) {
-                          textIndex++;
-                          widget.data.text = textStates[textIndex];
-                        }
-                      }),
+                  onPressed: () {
+                    if (textIndex < textStates.length - 1) {
+                      textIndex++;
+                      widget.data.text = textStates[textIndex];
+                    }
+                  },
                   icon: Icon(Icons.redo)),
               IconButton(
                   onPressed: () =>
                       setState(() => controller.formate(widget.data)),
-                  icon: Icon(Icons.text_format)),
+                  icon: Icon(Icons.text_format))
             ],
           )
         ]));

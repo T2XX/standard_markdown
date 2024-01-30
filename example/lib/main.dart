@@ -284,7 +284,7 @@ class MyHomePage extends StatelessWidget {
         body: StandardMarkdown(
             oninit: (config) {
               editingController.selection =
-                  TextSelection.fromPosition(TextPosition(offset: 0));
+                  TextSelection.fromPosition(const TextPosition(offset: 0));
             },
             mode: 0,
             toolbar: true,
